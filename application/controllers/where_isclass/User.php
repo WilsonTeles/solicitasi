@@ -12,12 +12,14 @@ class User extends CI_Controller
             redirect();
         }
     }
-    public function index()
+    public function index($outraFuncao = null)
     {
         $data['user_id'] = $this->session->userdata('id');
         $data['nome'] = $this->session->userdata('nome');
-        $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
-        $this->session->set_userdata(array('table'=>$data['table']));
+        if (is_null($outraFuncao)) {
+            $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+            $this->session->set_userdata(array('table' => $data['table']));
+        }
         $data['Título_da_pagina'] = '';
         $data['_view'] = 'where_isclass/user/home.phtml';
         $this->load->view('layouts/main', $data);
@@ -75,34 +77,35 @@ class User extends CI_Controller
         $table = $this->Classroom_model->getTurmasByUserId($data['user_id'], $name);
         $data = array('table' => $table);
         $this->session->set_userdata($data);
-        $this->addTurma();
+        $this->index('temdado');
     }
 
-    
-    public function insertTurma(){
+    public function insertTurma()
+    {
         $userId = $this->session->userdata('id');
         $classroomId = $this->input->post('id');
         $this->Classroom_model->insertStudentclassroom($userId, $classroomId);
 
         $data['user_id'] = $this->session->userdata('id');
         $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
-        $this->session->set_userdata(array('table'=>$data['table']));
+        $this->session->set_userdata(array('table' => $data['table']));
 
         $classroomName = $this->Classroom_model->getClassroomName($classroomId)->name;
-        $data = array('msg'=>'Turma ' .$classroomName. ' adicionada a lista.' );
+        $data = array('msg' => 'Turma ' . $classroomName . ' adicionada a lista.');
         echo json_encode($data);
     }
-    public function removeTurma(){
+    public function removeTurma()
+    {
         $userId = $this->session->userdata('id');
         $classroomId = $this->input->post('id');
         $this->Classroom_model->removeStudentclassroom($userId, $classroomId);
 
         $data['user_id'] = $this->session->userdata('id');
         $data['table'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
-        $this->session->set_userdata(array('table'=>$data['table']));
+        $this->session->set_userdata(array('table' => $data['table']));
 
         $classroomName = $this->Classroom_model->getClassroomName($classroomId)->name;
-        $data = array('msg'=>'Turma ' .$classroomName. ' removida da lista.' );
+        $data = array('msg' => 'Turma ' . $classroomName . ' removida da lista.');
         echo json_encode($data);
     }
 }

@@ -13,7 +13,7 @@ class Classroom_model extends CI_Model
     {
         $this->db->select('
         classroom.id as cid,
-        teacher.name as tname,
+        professores.nome as tname,
         subject.name as sname,
         classroom.number as number,
         classroom.campus as campus,
@@ -28,11 +28,11 @@ class Classroom_model extends CI_Model
         $this->db->from('classroom');
         //$this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
-        $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
+        $this->db->join('professores', 'professores.id = classroom.teacher_id');
         $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
-        $this->db->group_by(array("teacher.id", "subject.id", "classroom_week_day.start_time"));
+        $this->db->group_by(array("professores.id", "subject.id", "classroom_week_day.start_time"));
         if (!$param) {
             $query = $this->db->get();
             return $query;
@@ -40,7 +40,7 @@ class Classroom_model extends CI_Model
             $this->db->where('student_classroom.user_id', $param);
         } else {
             $this->db->like('subject.name', $param, 'both');
-            $this->db->or_like('teacher.name', $param, 'both');
+            $this->db->or_like('professores.nome', $param, 'both');
             //$this->db->like('teacher.name', $param, 'both');
             //print_r($turmas);
         }
@@ -52,7 +52,7 @@ class Classroom_model extends CI_Model
     {
         return $this->db->select('
         classroom.id as cid,
-        teacher.name as tname,
+        professores.nome as tname,
         subject.name as sname,
         classroom.number as number,
         classroom.campus as campus,
@@ -72,7 +72,7 @@ class Classroom_model extends CI_Model
         $this->db = $this->getTurmasDetails();
         $this->db->from('classroom');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
-        $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
+        $this->db->join('professores', 'professores.id = classroom.teacher_id');
         $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
@@ -81,10 +81,10 @@ class Classroom_model extends CI_Model
 
         if ($queryString) {
             $this->db->like('subject.name', $queryString, 'both');
-            $this->db->or_like('teacher.name', $queryString, 'both');
+            $this->db->or_like('professores.nome', $queryString, 'both');
         }
 
-        $this->db->group_by(array("teacher.id", "subject.id"));
+        $this->db->group_by(array("professores.id", "subject.id"));
 
         return $this->db->get();
     }
@@ -152,7 +152,7 @@ class Classroom_model extends CI_Model
         $this->db = $this->getTurmasDetails();
         $this->db->from('classroom');
         $this->db->join('subject', 'subject.id = classroom.subject_id');
-        $this->db->join('teacher', 'teacher.id = classroom.teacher_id');
+        $this->db->join('professores', 'professores.id = classroom.teacher_id');
         $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
@@ -180,7 +180,7 @@ class Classroom_model extends CI_Model
     public function getTeacherAsDropdown()
     {
         $this->db->select('id, name');
-        $options = $this->db->get('teacher')->result();
+        $options = $this->db->get('professores')->result();
         return $this->getOptionsAsDropdown($options, 'o Professor');
     }
     public function getSubjectAsDropdown()
@@ -296,7 +296,7 @@ class Classroom_model extends CI_Model
     public function getTeacherByName($data)
     {
         $this->db->select('*');
-        $this->db->from('teacher');
+        $this->db->from('professores');
         $this->db->like('name', $data, 'both');
         return $this->db->get()->result();
     }
@@ -307,11 +307,11 @@ class Classroom_model extends CI_Model
             $values["img_url"] = $data["path"];
         }
         $this->db->where('id', $data["id"]);
-        $this->db->update('teacher', $values);
+        $this->db->update('professores', $values);
     }
     public function deleteTeacher($data)
     {
-        $this->db->delete('teacher', array('id' => $data["id"]));
+        $this->db->delete('professores', array('id' => $data["id"]));
     }
     public function createTeacher($data)
     {
@@ -319,7 +319,7 @@ class Classroom_model extends CI_Model
         if ($data["boolean"] == true) {
             $values["img_url"] = $data["path"];
         }
-        $this->db->insert('teacher', $values);
+        $this->db->insert('professores', $values);
     }
     
     //CRUD PERIOD

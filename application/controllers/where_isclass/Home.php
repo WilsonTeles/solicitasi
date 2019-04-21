@@ -28,7 +28,6 @@ class Home extends CI_Controller
     }
     public function index($outraFuncao = null)
     {
-        //$data['table'] = $this->montaTabela();
         $data['table'] = $this->Classroom_model->getTurmas();
         if ($this->session->userdata('status') == 'aluno') {
             $data['user_id'] = $this->session->userdata('id');

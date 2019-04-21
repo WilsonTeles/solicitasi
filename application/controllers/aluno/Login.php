@@ -6,6 +6,8 @@ class Login extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->load->Model('Classroom_model');
+
         if (DEBUGAR) {
             $this->output->enable_profiler(TRUE);
         };
@@ -106,6 +108,7 @@ class Login extends CI_Controller {
                     } else {
                         $data['foto'] = 'imagens/semimagem.jpg';
                     }
+                    $data['table'] = $this->Classroom_model->getTurmasByUserId($data['id'], null);
 
                     $this->session->set_userdata($data);
 
