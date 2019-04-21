@@ -1,0 +1,19 @@
+/* breadcrumb */
+
+
+.breadcrumb-right-arrow .breadcrumb-item+.breadcrumb-item::before {
+    content: "›";
+    vertical-align:top;
+    font-size:40px;
+    line-height:15px;
+}
+
+.breadcrumb-right-tag .breadcrumb-item  {color:#fff;}
+
+.breadcrumb a{
+    color: black;
+}
+.breadcrumb-item.active{
+    color: black;
+    font-weight: bold;
+}
