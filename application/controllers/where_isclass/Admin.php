@@ -13,8 +13,8 @@ class Admin extends CI_Controller
     {
         //$this->load->view('admin/classroom_create_edit.phtml');
 
-        $data['user_id'] = $this->session->userdata('user_id');
-        $data['user_firstname'] = $this->session->userdata('user_firstname');
+        //$data['user_id'] = $this->session->userdata('user_id');
+        //$data['user_firstname'] = $this->session->userdata('user_firstname');
         is_null($outraFuncao) ? $data['table'] = $this->Classroom_model->getTurmas() : $data['table'] = $this->session->userdata('table');
         $data['Título_da_pagina'] = '';
 
@@ -23,29 +23,31 @@ class Admin extends CI_Controller
 
     }
     public function searchHome()
-    {   //TODO AJEITAR PESQUISA COM RESULTADO VAZIO
+    { //TODO AJEITAR PESQUISA COM RESULTADO VAZIO
         $name = $this->input->post('search');
         $data['table'] = $this->Classroom_model->getTurmasByName($name);
         $this->session->set_userdata(array('table' => $data['table']));
         $this->index('temdado');
-        
+
     }
 
     public function teachers()
     {
-        $data['user_id'] = $this->session->userdata('user_id');
         $data['table'] = $this->Classroom_model->getTeacherByName('');
-        
+
         $data['Título_da_pagina'] = '';
         $data['_view'] = 'where_isclass/admin/teachers.phtml';
         $this->load->view('layouts/main', $data);
     }
     public function searchTeachers()
     {
-        $data['user_id'] = $this->session->userdata('user_id');
         $name = $this->input->post('search');
         $data['table'] = $this->Classroom_model->getTeacherByName($name);
-        $this->load->view('admin/teachers.phtml', $data);
+        
+        $data['Título_da_pagina'] = '';
+        $data['_view'] = 'where_isclass/admin/teachers.phtml';
+        $this->load->view('layouts/main', $data);
+
     }
     public function modalTeacher()
     {
@@ -55,7 +57,7 @@ class Admin extends CI_Controller
         $name = $data['name'];
         $teacherImage = $_FILES['teacherImage'];
         $config = array(
-            'upload_path' => './teacherimage',
+            'upload_path' => './imagens/teacherimage',
             'allowed_types' => 'gif|jpg|png|jpeg',
             'file_name' => $name . $_FILES['teacherImage']['name'],
             'max_width' => '10000',
@@ -64,10 +66,11 @@ class Admin extends CI_Controller
         );
         $this->upload->initialize($config);
         if ($this->upload->do_upload('teacherImage')) {
-            $path = 'teacherimage/' . str_ireplace(' ', '_', $config['file_name']);
+            $path = 'imagens/teacherimage/' . str_ireplace(' ', '_', $config['file_name']);
             $data['path'] = $path;
             $data['boolean'] = true;
         } else {
+            echo $this->upload->display_errors();
             $data['boolean'] = false;
         };
 
@@ -78,24 +81,25 @@ class Admin extends CI_Controller
         } else if ($data["action"] == 'create') {
             $this->Classroom_model->createTeacher($data);
         }
-        redirect('admin/admin/teachers');
+        redirect('where_isclass/admin/teachers');
     }
 
     public function subjects()
     {
-        $data['user_id'] = $this->session->userdata('user_id');
         $data['table'] = $this->Classroom_model->getSubjectByName('');
-        
+
         $data['Título_da_pagina'] = '';
         $data['_view'] = 'where_isclass/admin/subjects.phtml';
         $this->load->view('layouts/main', $data);
     }
     public function searchTurma()
     {
-        $data['user_id'] = $this->session->userdata('user_id');
         $name = $this->input->post('search');
         $data['table'] = $this->Classroom_model->getSubjectByName($name);
-        $this->load->view('admin/subjects.phtml', $data);
+
+        $data['Título_da_pagina'] = '';
+        $data['_view'] = 'where_isclass/admin/subjects.phtml';
+        $this->load->view('layouts/main', $data);
     }
     public function modalSubject()
     {
@@ -109,12 +113,11 @@ class Admin extends CI_Controller
         } else if ($data["action"] == 'create') {
             $this->Classroom_model->createSubject($data);
         }
-        redirect('admin/admin/subjects');
+        redirect('where_isclass/admin/subjects');
     }
 
     public function periods()
     {
-        $data['user_id'] = $this->session->userdata('user_id');
         $data['table'] = $this->Classroom_model->getPeriodByName('');
 
         $data['Título_da_pagina'] = '';
@@ -124,10 +127,13 @@ class Admin extends CI_Controller
     }
     public function searchPeriods()
     {
-        $data['user_id'] = $this->session->userdata('user_id');
         $name = $this->input->post('search');
         $data['table'] = $this->Classroom_model->getPeriodByName($name);
-        $this->load->view('admin/periods.phtml', $data);
+
+        $data['Título_da_pagina'] = '';
+        $data['_view'] = 'where_isclass/admin/periods.phtml';
+        $this->load->view('layouts/main', $data);
+
     }
     public function modalPeriod()
     {
@@ -141,7 +147,7 @@ class Admin extends CI_Controller
         } else if ($data["action"] == 'create') {
             $this->Classroom_model->createPeriod($data);
         }
-        redirect('admin/admin/periods');
+        redirect('where_isclass/admin/periods');
     }
 
     public function classroom($id, $action)
@@ -150,7 +156,6 @@ class Admin extends CI_Controller
             $data['turma'] = $this->Classroom_model->getTurmaById($id);
         }
         $data['action'] = $action;
-        //$data['user_id'] = $this->session->userdata('user_id');
 
         $data['teacherDropdown'] = $this->Classroom_model->getTeacherAsDropdown();
         $data['subjectDropdown'] = $this->Classroom_model->getSubjectAsDropdown();

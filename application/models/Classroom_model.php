@@ -298,11 +298,13 @@ class Classroom_model extends CI_Model
         $this->db->select('*, nome as name');
         $this->db->from('professores');
         $this->db->like('nome', $data, 'both');
+        $this->db->order_by('nome', 'asc');
         return $this->db->get()->result();
     }
     public function updateTeacher($data)
     {
-        $values["name"] = $data["name"];
+        $values["nome"] = $data["name"];
+        $values["email"] = $data["email"];
         if ($data["boolean"] == true) {
             $values["img_url"] = $data["path"];
         }
@@ -315,7 +317,8 @@ class Classroom_model extends CI_Model
     }
     public function createTeacher($data)
     {
-        $values['name'] = $data["name"];
+        $values['nome'] = $data["name"];
+        $values["email"] = $data["email"];
         if ($data["boolean"] == true) {
             $values["img_url"] = $data["path"];
         }
