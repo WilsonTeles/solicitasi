@@ -13,7 +13,11 @@
 
                 <?php if ($this->session->userdata('status') == 'admin') { ?> 
 
-                        <li class="nav-item">
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo base_url('where_isclass/Admin')?>">My Classroom</a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link" href="<?php echo base_url('coord/logout') ?>">Classroom</a>
                     </li>
 
