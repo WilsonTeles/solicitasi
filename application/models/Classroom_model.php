@@ -179,7 +179,7 @@ class Classroom_model extends CI_Model
 
     public function getTeacherAsDropdown()
     {
-        $this->db->select('id, name');
+        $this->db->select('id, nome as name');
         $options = $this->db->get('professores')->result();
         return $this->getOptionsAsDropdown($options, 'o Professor');
     }
@@ -295,9 +295,9 @@ class Classroom_model extends CI_Model
     //CRUD TEACHER
     public function getTeacherByName($data)
     {
-        $this->db->select('*');
+        $this->db->select('*, nome as name');
         $this->db->from('professores');
-        $this->db->like('name', $data, 'both');
+        $this->db->like('nome', $data, 'both');
         return $this->db->get()->result();
     }
     public function updateTeacher($data)
