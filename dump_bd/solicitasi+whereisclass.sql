@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.25, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
 --
 -- Host: localhost    Database: solicitasi
 -- ------------------------------------------------------
--- Server version	5.7.25-0ubuntu0.18.04.2
+-- Server version	5.7.26-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -143,7 +143,7 @@ CREATE TABLE `classroom` (
   KEY `classroom_period_FK` (`period_id`),
   CONSTRAINT `classroom_period_FK` FOREIGN KEY (`period_id`) REFERENCES `period` (`id`),
   CONSTRAINT `classroom_subject_FK` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`),
-  CONSTRAINT `classroom_teacher_FK` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+  CONSTRAINT `classroom_teacher_FK` FOREIGN KEY (`teacher_id`) REFERENCES `professores` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -253,7 +253,7 @@ CREATE TABLE `period` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +262,7 @@ CREATE TABLE `period` (
 
 LOCK TABLES `period` WRITE;
 /*!40000 ALTER TABLE `period` DISABLE KEYS */;
-INSERT INTO `period` VALUES (1,'2018/2');
+INSERT INTO `period` VALUES (1,'2018/2'),(3,'2019/1');
 /*!40000 ALTER TABLE `period` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -279,7 +279,7 @@ CREATE TABLE `professores` (
   `email` varchar(50) COLLATE latin1_general_ci NOT NULL,
   `img_url` varchar(100) COLLATE latin1_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=67 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -288,7 +288,7 @@ CREATE TABLE `professores` (
 
 LOCK TABLES `professores` WRITE;
 /*!40000 ALTER TABLE `professores` DISABLE KEYS */;
-INSERT INTO `professores` VALUES (1,'Alexandre Plastino','plastino@ic.uff.br',NULL),(2,'Aline de Paula Nascimento','',NULL),(3,'Aline Marins Paes Carvalho','',NULL),(4,'Andréa Magalhães Magdaleno','',NULL),(5,'Anselmo Antunes Montenegro','',NULL),(6,'Antonio Augusto de Aragão Rocha','',NULL),(7,'Aura Conci','',NULL),(8,'Bruno Lopes','',NULL),(9,'Carlos Alberto de Jesus Martinhon','',NULL),(10,'Carlos Alberto Soares Ribeiro','',NULL),(11,'Celso da Cruz Carneiro Ribeiro','',NULL),(12,'Célio Vinicius Neves de Albuquerque','',NULL),(13,'Christiano de Oliveira Braga','',NULL),(14,'Cristina Nader Vasconcelos','',NULL),(15,'Daniel Cardoso Moraes de Oliveira','',NULL),(16,'Daniela Gorski Trevisan','',NULL),(17,'Dante Corbucci Filho','',NULL),(18,'Débora Christina Muchaluat Saade','',NULL),(19,'Diego Gimenez Passos','',NULL),(20,'Esteban Walter Gonzalez Clua','',NULL),(21,'Eugene Francis Vinod Rebello','',NULL),(22,'Fábio Protti','',NULL),(23,'Fernanda Passos','',NULL),(24,'Flávia Cristina Bernardini','',NULL),(25,'Flávio Seixas','',NULL),(26,'Helena Cristina da Gama Leitão','',NULL),(27,'Igor Monteiro Moraes','',NULL),(28,'Isabel Cristina Mello Rosset','',NULL),(29,'Isabel Leite Cafezeiro','',NULL),(30,'John Reed','',NULL),(31,'José Henrique Carneiro de Araújo','',NULL),(32,'José Raphael Bokehi','',NULL),(33,'José Ricardo de Almeida Torreão','',NULL),(34,'José Viterbo Filho','',NULL),(35,'Karina Mochetti','',NULL),(36,'Lauro Eduardo Kozovits','',NULL),(37,'Leandro Augusto Frata Fernandes','',NULL),(38,'Leonardo Cruz da Costa','leo@ic.uff.br',NULL),(39,'Leonardo Gresta Paulino Murta','',NULL),(40,'Loana Tito Nogueira','',NULL),(41,'Luciana Cardoso de Castro Salgado','',NULL),(42,'Luis Antonio Brasil Kowada','',NULL),(43,'Luis Martí Orosa','',NULL),(44,'Luiz André Portes Paes Leme','',NULL),(45,'Luiz Satoru Ochi','',NULL),(46,'Lúcia Maria de Assumpção Drummond','',NULL),(47,'Marcelo Fornazin','',NULL),(48,'Marco Antonio Monteiro Silva Ramos','',NULL),(49,'Marcos Kalinowski','',NULL),(50,'Marcos Lage','',NULL),(51,'Maria Cristina Silva Boeres','',NULL),(52,'Mauricio Kischinhevsky','',NULL),(53,'Milton Brown do Coutto Filho','',NULL),(54,'Otton Teixeira da Silveira Filho','',NULL),(55,'Raphael Pereira de Oliveira Guerra','',NULL),(56,'Raquel Bravo','',NULL),(57,'Regina Célia Paula Leal Toledo','',NULL),(58,'Ricardo Leiderman','',NULL),(59,'Rodrigo Salvador Monteiro','',NULL),(60,'Simone de Lima Martins','',NULL),(61,'Teresa Cristina de Aguiar','',NULL),(62,'Uéverton dos Santos Souza','',NULL),(63,'Vanessa Braganholo Murta','',NULL),(64,'Victor Teixeira de Almeida','',NULL),(65,'Yuri Abitbol de Menezes Frota','',NULL);
+INSERT INTO `professores` VALUES (2,'Aline de Paula Nascimento','',NULL),(3,'Aline Marins Paes Carvalho','',NULL),(4,'Andréa Magalhães Magdaleno','',NULL),(5,'Anselmo Antunes Montenegro','',NULL),(6,'Antonio Augusto de Aragão Rocha','',NULL),(7,'Aura Conci','',NULL),(8,'Bruno Lopes','',NULL),(9,'Carlos Alberto de Jesus Martinhon','',NULL),(10,'Carlos Alberto Soares Ribeiro','',NULL),(11,'Celso da Cruz Carneiro Ribeiro','',NULL),(12,'Célio Vinicius Neves de Albuquerque','',NULL),(13,'Christiano de Oliveira Braga','',NULL),(14,'Cristina Nader Vasconcelos','',NULL),(15,'Daniel Cardoso Moraes de Oliveira','',NULL),(16,'Daniela Gorski Trevisan','',NULL),(17,'Dante Corbucci Filho','',NULL),(18,'Débora Christina Muchaluat Saade','',NULL),(19,'Diego Gimenez Passos','',NULL),(20,'Esteban Walter Gonzalez Clua','',NULL),(21,'Eugene Francis Vinod Rebello','',NULL),(22,'Fábio Protti','',NULL),(23,'Fernanda Passos','',NULL),(24,'Flávia Cristina Bernardini','',NULL),(25,'Flávio Seixas','',NULL),(26,'Helena Cristina da Gama Leitão','',NULL),(27,'Igor Monteiro Moraes','',NULL),(28,'Isabel Cristina Mello Rosset','',NULL),(29,'Isabel Leite Cafezeiro','',NULL),(30,'John Reed','',NULL),(31,'José Henrique Carneiro de Araújo','',NULL),(32,'José Raphael Bokehi','',NULL),(33,'José Ricardo de Almeida Torreão','',NULL),(34,'José Viterbo Filho','',NULL),(35,'Karina Mochetti','',NULL),(36,'Lauro Eduardo Kozovits','',NULL),(37,'Leandro Augusto Frata Fernandes','',NULL),(38,'Leonardo Cruz da Costa','leo@ic.uff.br',NULL),(39,'Leonardo Gresta Paulino Murta','',NULL),(40,'Loana Tito Nogueira','',NULL),(41,'Luciana Cardoso de Castro Salgado','',NULL),(42,'Luis Antonio Brasil Kowada','',NULL),(43,'Luis Martí Orosa','',NULL),(44,'Luiz André Portes Paes Leme','',NULL),(45,'Luiz Satoru Ochi','',NULL),(46,'Lúcia Maria de Assumpção Drummond','',NULL),(47,'Marcelo Fornazin','',NULL),(48,'Marco Antonio Monteiro Silva Ramos','',NULL),(49,'Marcos Kalinowski','',NULL),(50,'Marcos Lage','',NULL),(51,'Maria Cristina Silva Boeres','',NULL),(52,'Mauricio Kischinhevsky','',NULL),(53,'Milton Brown do Coutto Filho','',NULL),(54,'Otton Teixeira da Silveira Filho','',NULL),(55,'Raphael Pereira de Oliveira Guerra','',NULL),(56,'Raquel Bravo','',NULL),(57,'Regina Célia Paula Leal Toledo','',NULL),(58,'Ricardo Leiderman','',NULL),(59,'Rodrigo Salvador Monteiro','',NULL),(60,'Simone de Lima Martins','',NULL),(61,'Teresa Cristina de Aguiar','',NULL),(62,'Uéverton dos Santos Souza','',NULL),(64,'Victor Teixeira de Almeida','',NULL),(66,'Alexandre Plastino','plastino@ic.uff.br','imagens/teacherimage/Alexandre_Plastinoplastino.png');
 /*!40000 ALTER TABLE `professores` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -333,7 +333,7 @@ CREATE TABLE `subject` (
   `name` varchar(100) NOT NULL,
   `code` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -342,7 +342,7 @@ CREATE TABLE `subject` (
 
 LOCK TABLES `subject` WRITE;
 /*!40000 ALTER TABLE `subject` DISABLE KEYS */;
-INSERT INTO `subject` VALUES (1,'Engenharia De Software I','123123123'),(2,'Banco de Dados Não Convencionais','71936492'),(3,'Gestão de Processos e Manutenção de Software','826493632'),(4,'Tópicos Especiais','321654');
+INSERT INTO `subject` VALUES (1,'Engenharia De Softwares I','123123123'),(2,'Banco de Dados Não Convencionais','71936492'),(3,'Gestão de Processos e Manutenção de Software','826493632');
 /*!40000 ALTER TABLE `subject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -438,4 +438,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-20 22:37:08
+-- Dump completed on 2019-05-04 20:06:48
