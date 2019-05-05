@@ -142,7 +142,7 @@ CREATE TABLE `classroom` (
   KEY `classroom_subject_FK` (`subject_id`),
   KEY `classroom_period_FK` (`period_id`),
   CONSTRAINT `classroom_period_FK` FOREIGN KEY (`period_id`) REFERENCES `period` (`id`),
-  CONSTRAINT `classroom_subject_FK` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`),
+  CONSTRAINT `classroom_subject_FK` FOREIGN KEY (`subject_id`) REFERENCES `disciplinas` (`id`),
   CONSTRAINT `classroom_teacher_FK` FOREIGN KEY (`teacher_id`) REFERENCES `professores` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -307,7 +307,7 @@ CREATE TABLE `student_classroom` (
   KEY `student_classroom_user_FK` (`user_id`),
   KEY `student_classroom_classroom_FK` (`classroom_id`),
   CONSTRAINT `student_classroom_classroom_FK` FOREIGN KEY (`classroom_id`) REFERENCES `classroom` (`id`),
-  CONSTRAINT `student_classroom_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  CONSTRAINT `student_classroom_user_FK` FOREIGN KEY (`user_id`) REFERENCES `alunos` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
