@@ -26,13 +26,14 @@ class Home extends CI_Controller
         $this->load->Model('Classroom_model');
         //$this->load->Model('Login_model');
     }
-    public function index($outraFuncao = null)
+    public function index($table = null)
     {
         $data['table'] = $this->Classroom_model->getTurmas();
         if ($this->session->userdata('status') == 'aluno') {
             $data['user_id'] = $this->session->userdata('id');
-            if (is_null($outraFuncao)) {
-                $userTable = $this->session->userdata('table');
+            $userTable = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
+            if (!is_null($table)) {
+                $data['table'] = $table['table'];
             }
             $data['table'] = $this->compareTurmas($data['table'], $userTable);
         }
@@ -159,19 +160,17 @@ class Home extends CI_Controller
     }
     public function searchTurma()
     {
-        // if ($this->session->userdata('logged')) {
-        //     $data['user_id'] = $this->session->userdata('user_id');
-        //     $data['table_user'] = $this->Classroom_model->getTurmasByUserId($data['user_id'], null);
-        // }
+
         $name = $this->input->post('search');
         $data['table'] = $this->Classroom_model->getTurmasByName($name);
-        $this->session->set_userdata(array('table' => $data['table']));
-        $this->index('temdado');
+        //$this->session->set_userdata(array('table' => $data['table']));
+        $this->index($data);
         //$this->load->view('home.phtml', $data);
     }
 
-    public function compareTurmas($table, $userTable)
+    public function compareTurmas($table, $userTable = null)
     {
+        //var_dump($userTable);
         if (!empty($table) && !empty($userTable)) {
             for ($i = 0; $i < count($table); $i++) {
                 for ($y = 0; $y < count($userTable); $y++) {
@@ -185,12 +184,12 @@ class Home extends CI_Controller
                 }
             }
         }
-        if (empty($userTable)) {
+        if (is_null($userTable)) {
             for ($i = 0; $i < count($table); $i++) {
                 $table[$i]['checked'] = '';
             }
         }
-
+        //var_dump($table);
         return $table;
     }
 }
