@@ -380,4 +380,23 @@ class Classroom_model extends CI_Model
         return $this->db->get();
     }
 
+    public function getAddresses($query = null){
+        $this->db->select('a.id as id, c.name as campus, building, iframe');
+        $this->db->from('addresses a');
+        $this->db->join('campus c', 'a.campus_id = c.id');
+        if (!is_null($query)){
+            $this->db->like('c.name', $query, 'both');
+            $this->db->or_like('a.building', $query, 'both');
+        }
+        return $this->db->get();
+    }
+
+    public function searchAddresses($query){
+        return $this->getAddresses($query);
+    }
+
+    public function getCampus(){
+        return $this->db->get('campus');
+    }
+
 }

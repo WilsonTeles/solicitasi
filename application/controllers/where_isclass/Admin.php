@@ -150,6 +150,34 @@ class Admin extends CI_Controller
         redirect('where_isclass/admin/periods');
     }
 
+    public function addresses($table = null)
+    {
+        $data['table'] = (is_null($table) ? $this->Classroom_model->getAddresses()->result() : $table );
+        
+        $data['Título_da_pagina'] = '';
+        $data['_view'] = 'where_isclass/admin/addresses.phtml';
+        $this->load->view('layouts/main', $data);
+
+    }
+
+    public function searchAddresses()
+    {
+        $name = $this->input->post('search');
+        $table = $this->Classroom_model->searchAddresses($name)->result();
+        $this->addresses($table);
+
+    }
+
+    public function modalAddresses()
+    {
+
+    }
+
+    public function getCampusDropdown(){
+        $result = $this->Classroom_model->getCampus()->result();
+        echo json_encode($result);
+    }
+
     public function classroom($id, $action)
     {
         if (!strcmp($action, 'editar')) {
