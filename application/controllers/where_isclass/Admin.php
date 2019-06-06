@@ -43,7 +43,7 @@ class Admin extends CI_Controller
     {
         $name = $this->input->post('search');
         $data['table'] = $this->Classroom_model->getTeacherByName($name);
-        
+
         $data['Título_da_pagina'] = '';
         $data['_view'] = 'where_isclass/admin/teachers.phtml';
         $this->load->view('layouts/main', $data);
@@ -187,7 +187,7 @@ class Admin extends CI_Controller
         }
         $this->Classroom_model->updateClassroom($data);
         $this->sendEmail($data['id']);
-        redirect('admin/admin');
+        redirect('where_isclass/admin');
     }
     public function createTurma()
     {
@@ -206,48 +206,52 @@ class Admin extends CI_Controller
                 $y++;
             }
         }
-        var_dump($data);
-        // $this->Classroom_model->createClassroom($data);
-        // redirect('admin/admin');
+        //var_dump($data);
+        $this->Classroom_model->createClassroom($data);
+        redirect('where_isclass/admin');
     }
     public function deleteTurma($id)
     {
         $this->Classroom_model->deleteClassroom($id);
-        redirect('admin/admin');
+        redirect('where_isclass/admin');
     }
     public function sendEmail($cid)
     {
+        $this->load->library('login');
         $classroomName = $this->Classroom_model->getClassroomName($cid);
         $result = $this->Classroom_model->getEmailByClassroom($cid);
+
+        $mail_message = 'Dear Student' . ',' . "\r\n";
+        $mail_message .= 'A Turma <b>' . $classroomName->name . '</b> foi atualizada!';
+        $mail_message .= '<br>Por favor, acesse o site <a>http://localhost/where-is-my-classroom</a> e confira!.';
+        $mail_message .= '<br>Thanks & Regards';
+        $mail_message .= '<br>Your company name';
+        date_default_timezone_set('Etc/UTC');
+        $this->load->library("phpmailer_library");
+        $mail = $this->phpmailer_library->load();
+        $mail->isSMTP();
+        $mail->SMTPSecure = "tls";
+        $mail->Debugoutput = 'html';
+        $mail->Host = $this->login->getSmtp();
+        $mail->Port = 587;
+        $mail->SMTPAuth = true;
+        $mail->Username = $this->login->getEmail();
+        $mail->Password = $this->login->getPassword();
+        $mail->setFrom($this->login->getEmail(), 'SolicitaSI');
+        $mail->IsHTML(true);
         foreach ($result->result() as $row) {
-            $mail_message = 'Dear ' . $row->name . ',' . "\r\n";
-            $mail_message .= 'A Turma <b>' . $classroomName->name . '</b> foi atualizada!';
-            $mail_message .= '<br>Por favor, acesse o site <a>http://localhost/where-is-my-classroom</a> e confira!.';
-            $mail_message .= '<br>Thanks & Regards';
-            $mail_message .= '<br>Your company name';
-            date_default_timezone_set('Etc/UTC');
-            $this->load->library("phpmailer_library");
-            $mail = $this->phpmailer_library->load();
-            $mail->isSMTP();
-            $mail->SMTPSecure = "tls";
-            $mail->Debugoutput = 'html';
-            $mail->Host = "smtp.live.com";
-            $mail->Port = 587;
-            $mail->SMTPAuth = true;
-            $mail->Username = "wjmarcolin@hotmail.com";
-            $mail->Password = "Wilson010695";
-            $mail->setFrom('wjmarcolin@hotmail.com', 'admin');
-            $mail->IsHTML(true);
             $mail->addAddress($row->email);
-            $mail->Subject = 'OTP from company';
-            $mail->Body = $mail_message;
-            $mail->AltBody = $mail_message;
-            if (!$mail->send()) {
-                $this->session->set_flashdata('msg', 'Failed to send password, please try again!');
-            } else {
-                $this->session->set_flashdata('msg', 'Password sent to your email!');
-            }
         }
+        $mail->Subject = 'OTP from company';
+        $mail->Body = $mail_message;
+        $mail->AltBody = $mail_message;
+
+        if (!$mail->send()) {
+            $this->session->set_flashdata('msg', 'Failed to send password, please try again!');
+        } else {
+            $this->session->set_flashdata('msg', 'Password sent to your email!');
+        }
+
         return;
     }
 }
