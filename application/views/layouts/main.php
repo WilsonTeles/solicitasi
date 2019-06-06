@@ -18,6 +18,8 @@
         <link  href="<?php echo base_url('assets/vendor/jquery-ui/jquery-ui.css') ?>" rel="stylesheet" >
         <link  href="<?php echo base_url('assets/typeaheadjs.css') ?>" rel="stylesheet" >
         <link  href="<?php echo base_url('assets/estilo.css') ?>" rel="stylesheet" >
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css') ?>">
+	    <link rel="stylesheet" href="<?php echo base_url('assets/css/home.css') ?>">
 
         <script src="<?php echo base_url() ?>assets/vendor/jquery/jquery.min.js"></script>
         <script src="<?php echo base_url() ?>assets/vendor/typeahead/typeahead.js"></script>
@@ -117,6 +119,9 @@
         <script src="<?php echo base_url() ?>assets/vendor/bootstrap/js/bootstrap.min.js"></script>
         <script src="<?php echo base_url() ?>assets/vendor/jquery-ui/jquery-ui.min.js"></script>
         <script src="<?php echo base_url() ?>assets/vendor/jquery/jquery.mask.min.js"></script>
+        <script type="application/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
+	    <script type="application/javascript" src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
+	    <script type="application/javascript" src="<?php echo base_url('assets/js/bootstrap.js') ?>"></script>
 
         <?php if (isset($_script) && $_script) { ?>
             <script>
