@@ -29,8 +29,9 @@
 						<div class="d-inline-flex justify-content-between">
 							<h5 class="mb-1" data-js="building"><?php echo $row->building ?></h5>
 						</div>
-                        <div id="map-container" class="float-right" ><?php echo $row->iframe ?></div>
+                        <div id="map-container" class="float-right" data-js="iframe" ><?php echo $row->iframe ?></div>
                         <p class="mb-1" data-js="campus"><?php echo $row->campus ?></p>
+						<p data-js="campus_id" hidden><?php echo $row->campus_id?></p>
 						<p data-js="id" hidden><?php echo $row->id ?></p>
 					</a>
 					<?php endforeach;?>
@@ -56,7 +57,7 @@
 						<input name="action" id="action" hidden/>
 						<div class="form-group">
 							<label for="name">Prédio</label>
-							<input class="form-control" type="text" name="name" placeholder="Nome" required>
+							<input class="form-control" type="text" name="building" placeholder="Nome" required>
 						</div>
                         <!-- campo do campus -->
                         <div class="form-group">
@@ -64,6 +65,10 @@
                             <select name="campus" class="form-control">
                             </select>
                         </div>
+						<div class="form-group">
+							<label for="iframe">Iframe</label>
+							<input class="form-control" type="text" name="iframe" placeholder="Iframe" required>
+						</div>
 						<input name="id" hidden>
 						<div class="modal-footer">
 							<?php echo form_submit('', 'Deletar', 'data-js="delete-button", class="btn btn-danger mr-auto", id="bDelete"') ?>
@@ -88,7 +93,9 @@
 
 			var modalTitle = modal.find('#modal-title').first();
 			var modalIdInput = modal.find('.modal-body input[name="id"]').first();
-			var modalNameInput = modal.find('.modal-body input[name="name"]').first();
+			var modalBuildingInput = modal.find('.modal-body input[name="building"]').first();
+			var modalCampusInput = modal.find('.modal-body select[name="campus"]').first();
+			var modalIframeInput = modal.find('.modal-body input[name="iframe"]').first();
 
 			function resetInput(){
 				modalTitle.text('Criar Novo Endereço');
@@ -109,7 +116,10 @@
 				deleteButton.show();
 				var elem = $( this );
 				var id = elem.find('[data-js="id"]').text();
-				var subjectName = elem.find('[data-js="building"]').text();
+				var campusId = elem.find('[data-js="campus_id"]').text();
+				var building = elem.find('[data-js="building"]').text();
+				var campus = elem.find('[data-js="campus"]').text();
+				var iframe = elem.find('[data-js="iframe"]').html();
 				var action = document.getElementById('action');
 				var bSave = document.getElementById('bSave');
 				var bDelete = document.getElementById('bDelete');
@@ -119,9 +129,11 @@
 				bDelete.addEventListener('click', function(){
 					action.value = 'delete'
 				});
-				modalTitle.text(subjectName);
+				modalTitle.text(building);
 				modalIdInput.val(id);
-				modalNameInput.val(subjectName);
+				modalBuildingInput.val(building);
+				modalCampusInput.val(campusId);
+				modalIframeInput.val(iframe);
 
 			});
 

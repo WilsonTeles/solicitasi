@@ -170,6 +170,17 @@ class Admin extends CI_Controller
 
     public function modalAddresses()
     {
+        foreach ($_POST as $key => $value){
+            $data[$key] = $this->input->post($key);
+        }
+        if ($data["action"] == 'edit') {
+            $this->Classroom_model->updateAddresses($data);
+        } else if ($data["action"] == 'delete') {
+            $this->Classroom_model->deleteAddresses($data);
+        } else if ($data["action"] == 'create') {
+            $this->Classroom_model->createAddresses($data);
+        }
+        redirect('where_isclass/admin/addresses');
 
     }
 

@@ -381,7 +381,7 @@ class Classroom_model extends CI_Model
     }
 
     public function getAddresses($query = null){
-        $this->db->select('a.id as id, c.name as campus, building, iframe');
+        $this->db->select('a.id as id, campus_id, c.name as campus, building, iframe');
         $this->db->from('addresses a');
         $this->db->join('campus c', 'a.campus_id = c.id');
         if (!is_null($query)){
@@ -391,12 +391,37 @@ class Classroom_model extends CI_Model
         return $this->db->get();
     }
 
+
+    //CRUD addresses
     public function searchAddresses($query){
         return $this->getAddresses($query);
     }
 
     public function getCampus(){
         return $this->db->get('campus');
+    }
+
+    public function updateAddresses($data){
+        $values = array(
+            'campus_id' => $data["campus"],
+            'building' => $data["building"],
+            'iframe' => $data["iframe"]
+        );
+        $this->db->where('id', $data["id"]);
+        $this->db->update('addresses', $values);
+    }
+
+    public function deleteAddresses($data){
+        $this->db->delete('addresses', array('id' => $data["id"]));
+    }
+
+    public function createAddresses($data){
+        $values = array(
+            'campus_id' => $data["campus"],
+            'building' => $data["building"],
+            'iframe' => $data["iframe"],
+        );
+        $this->db->insert('addresses', $values);
     }
 
 }
