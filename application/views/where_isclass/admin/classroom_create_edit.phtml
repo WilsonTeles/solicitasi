@@ -54,16 +54,23 @@
 								<hr />
 								<div class="form-row">
 									<div class="form-group col-md-4">
-										<label for="name-input">Campus</label>
-										<input type="text" placeholder="Praia Vermelha" class="form-control" id="campus-input" name="campus" required />
+										<label for="campus-select">Campus</label>
+										<select class="custom-select" id="campus-select" name="campus_id" required>
+											<?php echo $campusDropdown ?>
+										</select>
 									</div>
 									<div class="form-group col-md-4">
-										<label for="name-input">Prédio</label>
-										<input type="text" placeholder="Instituto De Computação" class="form-control" id="building-input" name="building" required />
+										<label for="building-select">Prédio</label>
+										<select class="custom-select" id="building-select" name="building" required>
+										</select>
 									</div>
 									<div class="form-group col-md-4">
 										<label for="name-input">Endereço</label>
-										<input type="text" placeholder="Rua Das Coves" class="form-control" id="address-input" name="address" required />
+										<input type="text" placeholder="Rua Das Coves" class="form-control" id="address-input" name="address" required readonly />
+									</div>
+									<div class="form-group col-md-4">
+										<label for="name-input">Google Maps</label>
+										<input type="textarea" placeholder="iFrame do Google Maps pequeno" class="form-control" id="maps_info" name="maps_info" required readonly />
 									</div>
 								</div>
 								<div class="form-row">
@@ -78,10 +85,7 @@
 											<option value="2">Laboratório</option>
 										</select>
 									</div>
-									<div class="form-group col-md-4">
-										<label for="name-input">Google Maps</label>
-										<input type="textarea" placeholder="iFrame do Google Maps pequeno" class="form-control" id="maps_info" name="maps_info" required />
-									</div>
+									
 								</div>
 								<hr />
 								<div class="form-row">
@@ -188,8 +192,8 @@
 		var subjectCount = subject.options.length;
 		var period = document.getElementById('period-select');
 		var periodCount = period.options.length;
-		var campus = document.getElementById('campus-input');
-		var predio = document.getElementById('building-input');
+		var campus = document.getElementById('campus-select');
+		var campusCount = campus.options.length;
 		var endereco = document.getElementById('address-input');
 		var numero = document.getElementById('number-input');
 		var maps = document.getElementById('maps_info');
@@ -215,6 +219,13 @@
 				break;
 			}
 		}
+		for (var i=0; i<campusCount; i++) {
+			if (campus.options[i].innerHTML == "<?php echo $class['campus'] ?>") {
+				campus.options[i].selected = true;
+				break;
+			}
+		}
+		
 		<?php
 		$dias = explode(", ", $class['dia']);
 		$optionDia[] = '';
@@ -234,8 +245,6 @@
 				document.getElementById('firstWeekDay6').checked = true;
 			}
 		<?php endforeach; ?>
-		campus.value = "<?php echo $class['campus'] ?>";
-		predio.value = "<?php echo $class['predio'] ?>";
 		endereco.value = "<?php echo $class['endereco'] ?>";
 		numero.value = "<?php echo $class['sala'] ?>";
 		horario_ini.value = "<?php echo $class['horario_ini'] ?>";
@@ -279,8 +288,55 @@
 				}
 			}
 		}
-		window.onload = segundoHorario;
+
+		campus.addEventListener('change', function(){
+			changeCampus();
+		});
+		function changeCampus(){
+			var campusId = campus.selectedIndex;
+			var selected = '';
+			$.ajax({
+				url: '/solicitasi/addressesDrop/ajax',
+				method: 'post',
+				data: {campusId: campusId},
+				dataType: 'json',
+				success:function(response){
+					$('select[name="building"]').empty();
+					$('select[name="building"]').append('<option value ="0">Selecione o Prédio </option>');
+                    $.each(response, function(key, value){
+						if (value.building == "<?php echo $class['predio'] ?>" ){
+							selected = 'selected';
+						}
+                        $('select[name="building"]').append('<option value ="' + value.id + '"' + selected + '>' + value.building + '</option>');
+						selected = '';
+					});
+				}
+			});
+		}
+
+		var building = document.getElementById('building-select');
+		building.addEventListener('change', function(event){
+			var campusId = campus.selectedIndex;
+			var buildingId = building.selectedIndex;
+			var buildingText = building.options[buildingId].text;
+			$.ajax({
+				url: '/solicitasi/addressesDrop/ajax',
+				method: 'post',
+				data: {campusId: campusId},
+				dataType: 'json',
+				success:function(response){
+					$.each(response, function(key, value){
+						if (buildingText == value.building){
+							endereco.value = value.address;
+							maps.value = value.iframe;
+						}
+					});
+					console.log(maps.value);
+				}
+			});
+		});
+		window.onload = function(){
+			segundoHorario();
+			changeCampus();
+		} 
 	</script>
-	<script type="application/javascript" src="<?php echo base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
-	<script type="application/javascript" src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
-	<script type="application/javascript" src="<?php echo base_url('assets/js/bootstrap.js') ?>"></script>

@@ -199,11 +199,20 @@ class Admin extends CI_Controller
         $data['teacherDropdown'] = $this->Classroom_model->getTeacherAsDropdown();
         $data['subjectDropdown'] = $this->Classroom_model->getSubjectAsDropdown();
         $data['periodDropdown'] = $this->Classroom_model->getPeriodAsDropdown();
+        $data['campusDropdown'] = $this->Classroom_model->getCampusAsDropdown();
 
         $data['Título_da_pagina'] = '';
 
         $data['_view'] = 'where_isclass/admin/classroom_create_edit.phtml';
         $this->load->view('layouts/main', $data);
+    }
+    public function getAddressesDropdown(){
+        foreach ($_POST as $key => $value) {
+            $data[$key] = $this->input->post($key);
+        }
+        $result = $this->Classroom_model->getAddressesByCampusId($data['campusId'])->result();
+
+        echo json_encode($result);
     }
 
     public function logout()

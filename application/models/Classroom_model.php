@@ -16,14 +16,14 @@ class Classroom_model extends CI_Model
         professores.nome as tname,
         disciplinas.nome as sname,
         classroom.number as number,
-        classroom.campus as campus,
-        classroom.building as building,
-        classroom.address as address,
+        campus.name as campus,
+        addresses.building as building,
+        addresses.address as address,
         period.name as period,
         GROUP_CONCAT(distinct week_day.name order by week_day.id ASC SEPARATOR "," ) as wdays,
         classroom_week_day.start_time,
         classroom_week_day.end_time,
-        maps_info,
+        addresses.iframe as maps_info
         ', false);
         $this->db->from('classroom');
         //$this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
@@ -32,6 +32,8 @@ class Classroom_model extends CI_Model
         $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
+        $this->db->join('addresses', 'addresses.id = classroom.address_id', 'left');
+        $this->db->join('campus', 'campus.id = addresses.campus_id', 'left');
         $this->db->group_by(array("professores.id", "disciplinas.id", "classroom_week_day.start_time"));
         if (!$param) {
             $query = $this->db->get();
@@ -55,14 +57,14 @@ class Classroom_model extends CI_Model
         professores.nome as tname,
         disciplinas.nome as sname,
         classroom.number as number,
-        classroom.campus as campus,
-        classroom.building as building,
-        classroom.address as address,
+        campus.name as campus,
+        addresses.building as building,
+        addresses.address as address,
         period.name as period,
         GROUP_CONCAT(distinct week_day.name order by week_day.id ASC SEPARATOR "," ) as wdays,
         classroom_week_day.start_time,
         classroom_week_day.end_time,
-        maps_info,
+        addresses.iframe as maps_info
         ', false);
     }
 
@@ -77,6 +79,8 @@ class Classroom_model extends CI_Model
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
         $this->db->join('student_classroom', 'student_classroom.classroom_id = classroom.id');
+        $this->db->join('addresses', 'addresses.id = classroom.address_id', 'left');
+        $this->db->join('campus', 'campus.id = addresses.campus_id', 'left');
         $this->db->where('student_classroom.user_id', $userId);
 
         if ($queryString) {
@@ -155,6 +159,8 @@ class Classroom_model extends CI_Model
         $this->db->join('professores', 'professores.id = classroom.teacher_id');
         $this->db->join('period', 'period.id = classroom.period_id');
         $this->db->join('classroom_week_day', 'classroom_week_day.classroom_id = classroom.id');
+        $this->db->join('addresses', 'addresses.id = classroom.address_id', 'left');
+        $this->db->join('campus', 'campus.id = addresses.campus_id', 'left');
         $this->db->join('week_day', 'week_day.id = classroom_week_day.week_day_id');
         $this->db->where('classroom.id', $id);
         $collection = $this->db->get();
@@ -196,6 +202,16 @@ class Classroom_model extends CI_Model
         $this->db->select('id, name');
         $options = $this->db->get('period')->result();
         return $this->getOptionsAsDropdown($options, 'o Período');
+    }
+    public function getAddressesAsDropdown(){
+        $this->db->select('id, building as name');
+        $options = $this->db->get('addresses')->result();
+        return $this->getOptionsAsDropdown($options, 'o Prédio');
+    }
+    public function getCampusAsDropdown(){
+        $this->db->select('id, name');
+        $options = $this->db->get('campus')->result();
+        return $this->getOptionsAsDropdown($options, 'o Campus');
     }
     
     //CRUD TURMA
@@ -380,21 +396,28 @@ class Classroom_model extends CI_Model
         return $this->db->get();
     }
 
-    public function getAddresses($query = null){
-        $this->db->select('a.id as id, campus_id, c.name as campus, building, iframe');
+    //CRUD addresses
+
+    public function getAddresses($like = null, $where = null){
+        $this->db->select('a.id as id, campus_id, c.name as campus, building, iframe, address');
         $this->db->from('addresses a');
         $this->db->join('campus c', 'a.campus_id = c.id');
-        if (!is_null($query)){
-            $this->db->like('c.name', $query, 'both');
-            $this->db->or_like('a.building', $query, 'both');
+        if (!is_null($like) && is_null($where)){
+            $this->db->like('c.name', $like, 'both');
+            $this->db->or_like('a.building', $like, 'both');
+        }
+        if (is_null($like) && !is_null($where)){
+            $this->db->where('a.campus_id', $where);
         }
         return $this->db->get();
     }
 
-
-    //CRUD addresses
     public function searchAddresses($query){
-        return $this->getAddresses($query);
+        return $this->getAddresses($query, null);
+    }
+
+    public function getAddressesByCampusId($id){
+        return $this->getAddresses(null, $id);
     }
 
     public function getCampus(){
@@ -405,7 +428,8 @@ class Classroom_model extends CI_Model
         $values = array(
             'campus_id' => $data["campus"],
             'building' => $data["building"],
-            'iframe' => $data["iframe"]
+            'iframe' => $data["iframe"],
+            'address' => $data["address"]
         );
         $this->db->where('id', $data["id"]);
         $this->db->update('addresses', $values);
@@ -420,6 +444,7 @@ class Classroom_model extends CI_Model
             'campus_id' => $data["campus"],
             'building' => $data["building"],
             'iframe' => $data["iframe"],
+            'address' => $data["address"]
         );
         $this->db->insert('addresses', $values);
     }

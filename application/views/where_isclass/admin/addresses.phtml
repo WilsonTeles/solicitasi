@@ -31,6 +31,7 @@
 						</div>
                         <div id="map-container" class="float-right" data-js="iframe" ><?php echo $row->iframe ?></div>
                         <p class="mb-1" data-js="campus"><?php echo $row->campus ?></p>
+						<p class="mb-1" data-js="address"><?php echo $row->address ?></p>
 						<p data-js="campus_id" hidden><?php echo $row->campus_id?></p>
 						<p data-js="id" hidden><?php echo $row->id ?></p>
 					</a>
@@ -56,7 +57,7 @@
 					<?php echo form_open('where_isclass/admin/modalAddresses', 'id="form-modal"') ?>
 						<input name="action" id="action" hidden/>
 						<div class="form-group">
-							<label for="name">Prédio</label>
+							<label for="building">Prédio</label>
 							<input class="form-control" type="text" name="building" placeholder="Nome" required>
 						</div>
                         <!-- campo do campus -->
@@ -65,6 +66,10 @@
                             <select name="campus" class="form-control">
                             </select>
                         </div>
+						<div class="form-group">
+							<label for="address">Endereço</label>
+							<input class="form-control" type="text" name="address" placeholder="Endereço" required>
+						</div>
 						<div class="form-group">
 							<label for="iframe">Iframe</label>
 							<input class="form-control" type="text" name="iframe" placeholder="Iframe" required>
@@ -95,6 +100,7 @@
 			var modalIdInput = modal.find('.modal-body input[name="id"]').first();
 			var modalBuildingInput = modal.find('.modal-body input[name="building"]').first();
 			var modalCampusInput = modal.find('.modal-body select[name="campus"]').first();
+			var modalAddressInput = modal.find('.modal-body input[name="address"]').first();
 			var modalIframeInput = modal.find('.modal-body input[name="iframe"]').first();
 
 			function resetInput(){
@@ -119,6 +125,8 @@
 				var campusId = elem.find('[data-js="campus_id"]').text();
 				var building = elem.find('[data-js="building"]').text();
 				var campus = elem.find('[data-js="campus"]').text();
+				var address = elem.find('[data-js="address"]').text();
+				console.log(address);
 				var iframe = elem.find('[data-js="iframe"]').html();
 				var action = document.getElementById('action');
 				var bSave = document.getElementById('bSave');
@@ -133,6 +141,7 @@
 				modalIdInput.val(id);
 				modalBuildingInput.val(building);
 				modalCampusInput.val(campusId);
+				modalAddressInput.val(address);
 				modalIframeInput.val(iframe);
 
 			});

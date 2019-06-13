@@ -54,3 +54,4 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['campusDrop/ajax'] = 'where_isclass/admin/getCampusDropdown';
+$route['addressesDrop/ajax'] = 'where_isclass/admin/getAddressesDropdown';
