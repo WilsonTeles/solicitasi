@@ -23,6 +23,10 @@
 				<div class="card-columns">
 					<?php if(!empty($table)): ?>
 					<?php foreach($table as $row) : ?>
+					<?php $dias = explode(", ", $row["dia"]) ?>
+					<?php $hini = explode(", ", $row["horarios_ini"])?>
+					<?php $hfim = explode(", ", $row["horarios_fim"])?>
+					<?php $salas = explode(", ", $row["sala"])?>
 					<div class="card">
 						<div class="card-body">
 							<h3 class="card-title">
@@ -32,14 +36,23 @@
 								<?php echo $row["professor"] ?>
 							</h6>
 							<p class="card-text">
-								<?php echo $row["horario_ini"] . ' - ' . $row["horario_fim"] ?>
-							</p>
-							<p class="card-text">
-								<?php echo $row["dia"] ?>
-							</p>
-							<p class="card-text">
 								<?php echo $row["campus"] . ' - ' . $row["predio"] ?>
 							</p>
+							<?php if (sizeof($dias) > 1 && (sizeof($hini) > 1 || sizeof($hfim) > 1)) : ?>
+								<p class="card-text">
+									<?php echo $dias[0] . ': ' . $hini[0] . ' - ' . $hfim[0] ?>
+								</p>
+								<p class="card-text">
+									<?php echo $dias[1] . ': ' . $hini[1] . ' - ' . $hfim[1] ?>
+								</p>
+							<?php else: ?>
+								<p class="card-text">
+									<?php echo $row["dia"] ?>
+								</p>
+								<p class="card-text">
+									<?php echo $row["horario_ini"] . ' - ' . $row["horario_fim"] ?>
+								</p>
+							<?php endif ?>
 							<p class="card-text">
 								<?php echo $row["sala"] ?>
 							</p>

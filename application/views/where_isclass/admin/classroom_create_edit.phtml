@@ -73,20 +73,6 @@
 										<input type="textarea" placeholder="iFrame do Google Maps pequeno" class="form-control" id="maps_info" name="maps_info" required readonly />
 									</div>
 								</div>
-								<div class="form-row">
-									<div class="form-group col-md-4">
-										<label for="name-input">Número</label>
-										<input type="text" placeholder="1000" class="form-control" id="number-input" name="number" required />
-									</div>
-									<div class="form-group col-md-4">
-										<label for="period-select">Tipo de Sala</label>
-										<select class="custom-select" id="room-type-select" name="room-type-select">
-											<option selected value="1">Sala</option>
-											<option value="2">Laboratório</option>
-										</select>
-									</div>
-									
-								</div>
 								<hr />
 								<div class="form-row">
 								<div class="form-group col-md-4">
@@ -128,10 +114,19 @@
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Início</label>
 										<input type="time" placeholder="18:00" class="form-control" id="start-time-input" name="start_time" required />
+										<br/>
+										<label for="name-input">Número</label>
+										<input type="text" placeholder="Número da Sala" class="form-control" id="room-input" name="room" required />
 									</div>
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Término</label>
-											<input type="time" placeholder="20:00" class="form-control" id="end-time-input" name="end_time" required />
+										<input type="time" placeholder="20:00" class="form-control" id="end-time-input" name="end_time" required />
+										<br/>
+										<label for="period-select">Tipo de Sala</label>
+										<select class="custom-select" id="room-type-select" name="room-type-select">
+											<option selected value="1">Sala</option>
+											<option value="2">Laboratório</option>
+										</select>
 									</div>
 								</div>
 								<br/>
@@ -165,10 +160,19 @@
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Início</label>
 										<input type="time" placeholder="18:00" class="form-control" id="2start-time-input" name="2start_time" required />
+										<br/>
+										<label for="name-input">Número</label>
+										<input type="text" placeholder="Número da Sala" class="form-control" id="2room-input" name="2room"  />
 									</div>
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Término</label>
-											<input type="time" placeholder="20:00" class="form-control" id="2end-time-input" name="2end_time" required />
+										<input type="time" placeholder="20:00" class="form-control" id="2end-time-input" name="2end_time" required />
+										<br/>
+										<label for="period-select">Tipo de Sala</label>
+										<select class="custom-select" id="room-type-select" name="room-type-select">
+											<option selected value="1">Sala</option>
+											<option value="2">Laboratório</option>
+										</select>
 									</div>
 								</div>
 
@@ -185,6 +189,8 @@
 			</div>
 		</div>
 	</div>
+			<?php var_dump($class)?>
+
 	<script>
 		var teacher = document.getElementById('teacher-select');
 		var teacherCount = teacher.options.length;
@@ -195,7 +201,6 @@
 		var campus = document.getElementById('campus-select');
 		var campusCount = campus.options.length;
 		var endereco = document.getElementById('address-input');
-		var numero = document.getElementById('number-input');
 		var maps = document.getElementById('maps_info');
 		var horario_ini = document.getElementById('start-time-input');
 		var horario_fim = document.getElementById('end-time-input');
@@ -207,6 +212,7 @@
 				break;
 			}
 		}
+		console.log(teacher.text);
 		for (var i=0; i<subjectCount; i++) {
 			if (subject.options[i].innerHTML == "<?php echo $class['turma'] ?>") {
 				subject.options[i].selected = true;
@@ -228,6 +234,7 @@
 		
 		<?php
 		$dias = explode(", ", $class['dia']);
+		$salas = explode(', ', $class['sala']);
 		$optionDia[] = '';
 		$i = 0;
 		foreach($dias as $dia): ?>
@@ -246,7 +253,11 @@
 			}
 		<?php endforeach; ?>
 		endereco.value = "<?php echo $class['endereco'] ?>";
-		numero.value = "<?php echo $class['sala'] ?>";
+		var salas = "<?php echo count($salas) ?>" 
+		document.getElementById('room-input').value = "<?php echo $salas[0] ?>"
+		if (salas > 1){
+			document.getElementById('2room-input').value = "<?php echo $salas[1] ?>"
+		}
 		horario_ini.value = "<?php echo $class['horario_ini'] ?>";
 		horario_fim.value = "<?php echo $class['horario_fim'] ?>";
 		maps.value = '<?php echo $class['maps'] ?>';
@@ -255,27 +266,13 @@
 		var linha = document.querySelector('#second-row');
 		var period = document.querySelector('#schedule-select');
 		period.addEventListener('change', function(event){
-			if (period.value == 1){
-				linha.style.display = "none";
-				document.getElementById('2start-time-input').value = '00:00';
-				document.getElementById('2end-time-input').value = '00:01';
-				document.getElementById('2firstWeekDay1').checked = true;
-			} else {
-				linha.style.display = "flex";
-				document.getElementById('2start-time-input').value = '';
-				document.getElementById('2end-time-input').value = '';
-				for(i = 1; i <= 6; i++){
-					var c = '2firstWeekDay';
-					c += i;
-					document.getElementById(c).checked = false;
-				}
-			}
+			segundoHorario();
 		}, false);
 		function segundoHorario(){
 			if (period.value == 1){
 				linha.style.display = "none";
-				document.getElementById('2start-time-input').value = '00:00';
-				document.getElementById('2end-time-input').value = '00:01';
+				document.getElementById('2start-time-input').required = false;
+				document.getElementById('2end-time-input').required = false;
 				document.getElementById('2firstWeekDay1').checked = true;
 			} else {
 				linha.style.display = "flex";
@@ -304,7 +301,7 @@
 					$('select[name="building"]').empty();
 					$('select[name="building"]').append('<option value ="0">Selecione o Prédio </option>');
                     $.each(response, function(key, value){
-						if (value.building == "<?php echo $class['predio'] ?>" ){
+						if ("<?php echo $action?>" != "criar" && value.building == "<?php echo isset($class['predio']) ? $class['predio'] : '' ?>" ){
 							selected = 'selected';
 						}
                         $('select[name="building"]').append('<option value ="' + value.id + '"' + selected + '>' + value.building + '</option>');
@@ -331,12 +328,13 @@
 							maps.value = value.iframe;
 						}
 					});
-					console.log(maps.value);
 				}
 			});
 		});
 		window.onload = function(){
-			segundoHorario();
+			<?php if (empty($class)): ?>
+				segundoHorario();
+			<?php endif?>
 			changeCampus();
 		} 
 	</script>
