@@ -28,7 +28,6 @@
 						<div class="d-inline-flex justify-content-between">
 							<h5 class="mb-1" data-js="teacher-name"><?php echo $row->name ?></h5>
 						</div>
-						<img src="<?php echo is_null($row->img_url) ? site_url().'imagens/professor_default.jpg' : site_url().$row->img_url ?>" data-js="teacher-image" style="max-width:90px; height:auto" class="rounded float-right">
 						<p class="mb-1" data-js="teacher-email"><?php echo $row->email ?></p>
 						<p data-js="id" hidden><?php echo $row->id ?></p>
 					</a>
@@ -61,15 +60,6 @@
 							<label for="email">Email</label>
 							<input class="form-control" type="text" id="email" name="email" placeholder="Email" required>
 						</div>
-						<div class="form-group">
-              			<label for="teacherImage">Foto</label>
-							<div class="input-group mb-3">
-								<div class="custom-file">
-									<input type="file" class="custom-file-input" id="teacherImage" name="teacherImage" aria-describedby="inputGroupFileAddon01">
-									<label class="custom-file-label" id="teacherImageLabel" for="teacherImage">Selecione um arquivo</label>
-								</div>
-							</div>
-						</div>
 						<input name="id" hidden>
 						<div class="modal-footer">
 							<?php echo form_submit('', 'Deletar', 'data-js="delete-button", class="btn btn-danger mr-auto", id="bDelete"') ?>
@@ -91,9 +81,6 @@
 
         var deleteButton = modal.find('[data-js="delete-button"]').first();
 
-        var modalImgInput = modal.find("#teacherImage").first();
-        var modalImgLabel = modal.find("#teacherImageLabel").first();
-
         var modalTitle = modal.find('#modal-title').first();
 				var modalIdInput = modal.find('.modal-body input[name="id"]').first();
         var modalNameInput = modal.find('.modal-body input[name="name"]').first();
@@ -113,16 +100,13 @@
 					action.value = 'create';
         });
 
-        modalImgInput.change(function() {
-          modalImgLabel.text(modalImgInput.first().val());
-        });
 
         //list item clicked
         $('.list-group-item').click(function() {
         	deleteButton.show();
-        	var elem = $( this );
+        			var elem = $( this );
 					var id = elem.find('[data-js="id"]').text();
-        	var teacherName = elem.find('[data-js="teacher-name"]').text()
+        			var teacherName = elem.find('[data-js="teacher-name"]').text()
 					var teacherEmail = elem.find('[data-js="teacher-email"]').text()
 					var action = document.getElementById('action');
 					var bSave = document.getElementById('bSave');
