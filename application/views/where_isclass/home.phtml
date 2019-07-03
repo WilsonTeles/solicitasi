@@ -94,7 +94,10 @@ if (!is_null($this->session->userdata('status'))) {
           <div class="card">
             <div class="card-body">
               <h3 class="card-title"><?php echo $row["turma"] ?></h3>
-              <h6 class="card-subtitle mb-4 text-muted"><?php echo $row["professor"] ?></h6>
+              <h6 class="card-subtitle mb-1 text-muted"><?php echo $row["professor"] ?></h6>
+              <h6 class="card-subtitle mb-4 text-muted">
+								<?php echo $row["prof_email"]?>
+							</h6>
               <p class="card-text"><?php echo $row["horario_ini"] . ' - ' . $row["horario_fim"] ?></p>
               <p class="card-text"><?php echo $row["dia"] ?></p>
               <p class="card-text"><?php echo $row["campus"] . ' - ' . $row["predio"] ?></p>
