@@ -147,6 +147,40 @@ class Admin extends CI_Controller
         redirect('where_isclass/admin/periods');
     }
 
+    public function campus()
+    {
+        $data['table'] = $this->Classroom_model->getCampusByName('');
+
+        $data['Título_da_pagina'] = '';
+        $data['_view'] = 'where_isclass/admin/campus.phtml';
+        $this->load->view('layouts/main', $data);
+
+    }
+    public function searchCampus()
+    {
+        $name = $this->input->post('search');
+        $data['table'] = $this->Classroom_model->getCampusByName($name);
+
+        $data['Título_da_pagina'] = '';
+        $data['_view'] = 'where_isclass/admin/campus.phtml';
+        $this->load->view('layouts/main', $data);
+
+    }
+    public function modalCampus()
+    {
+        foreach ($_POST as $key => $value) {
+            $data[$key] = $this->input->post($key);
+        }
+        if ($data["action"] == 'edit') {
+            $this->Classroom_model->updateCampus($data);
+        } else if ($data["action"] == 'delete') {
+            $this->Classroom_model->deleteCampus($data);
+        } else if ($data["action"] == 'create') {
+            $this->Classroom_model->createCampus($data);
+        }
+        redirect('where_isclass/admin/campus');
+    }
+
     public function addresses($table = null)
     {
         $data['table'] = (is_null($table) ? $this->Classroom_model->getAddresses()->result() : $table );

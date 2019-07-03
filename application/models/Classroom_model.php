@@ -15,6 +15,7 @@ class Classroom_model extends CI_Model
         $this->db->select('
         classroom.id as cid,
         professores.nome as tname,
+        professores.email as temail,
         disciplinas.nome as sname,
         campus.name as campus,
         addresses.building as building,
@@ -59,6 +60,7 @@ class Classroom_model extends CI_Model
         return $this->db->select('
         classroom.id as cid,
         professores.nome as tname,
+        professores.email as temail,
         disciplinas.nome as sname,
         campus.name as campus,
         addresses.building as building,
@@ -107,6 +109,7 @@ class Classroom_model extends CI_Model
                 'id' => $row->cid,
                 'turma' => $row->sname,
                 'professor' => $row->tname,
+                'prof_email' => $row->temail,
                 'horario_ini' => $row->start_time,
                 'horario_fim' => $row->end_time,
                 'horarios_ini' => $row->start_times,
@@ -298,11 +301,38 @@ class Classroom_model extends CI_Model
             }
         }
     }
+    public function getClassroomName($id)
+    {
+        $this->db->select('nome as name');
+        $this->db->from('disciplinas');
+        $this->db->join('classroom', 'classroom.subject_id = disciplinas.id');
+        $this->db->where('classroom.id', $id);
+        return $this->db->get()->row();
+    }
     public function deleteClassroom($id)
     {
         $this->db->delete('classroom_week_day', array('classroom_id' => $id));
         $this->db->delete('student_classroom', array('classroom_id' => $id));
         $this->db->delete('classroom', array('id' => $id));
+    }
+
+    public function insertStudentclassroom($userId, $classroomId)
+    {
+        $data = array(
+            'user_id' => $userId,
+            'classroom_id' => $classroomId,
+        );
+        $this->db->insert('student_classroom', $data);
+
+    }
+    public function removeStudentclassroom($userId, $classroomId)
+    {
+        $data = array(
+            'user_id' => $userId,
+            'classroom_id' => $classroomId,
+        );
+        $this->db->delete('student_classroom', $data);
+
     }
 
     //CRUD SUBJECT
@@ -333,14 +363,6 @@ class Classroom_model extends CI_Model
             'cod_disc' => $data["code"],
         );
         $this->db->insert('disciplinas', $values);
-    }
-    public function getClassroomName($id)
-    {
-        $this->db->select('nome as name');
-        $this->db->from('disciplinas');
-        $this->db->join('classroom', 'classroom.subject_id = disciplinas.id');
-        $this->db->where('classroom.id', $id);
-        return $this->db->get()->row();
     }
 
     //CRUD TEACHER
@@ -403,25 +425,7 @@ class Classroom_model extends CI_Model
         );
         $this->db->insert('period', $values);
     }
-
-    public function insertStudentclassroom($userId, $classroomId)
-    {
-        $data = array(
-            'user_id' => $userId,
-            'classroom_id' => $classroomId,
-        );
-        $this->db->insert('student_classroom', $data);
-
-    }
-    public function removeStudentclassroom($userId, $classroomId)
-    {
-        $data = array(
-            'user_id' => $userId,
-            'classroom_id' => $classroomId,
-        );
-        $this->db->delete('student_classroom', $data);
-
-    }
+    
     public function getEmailByClassroom($cid)
     {
         $this->db->select('alunos.email as email, alunos.nome as name', false);
@@ -429,6 +433,34 @@ class Classroom_model extends CI_Model
         $this->db->join('alunos', 'alunos.id = student_classroom.user_id');
         $this->db->where('student_classroom.classroom_id', $cid);
         return $this->db->get();
+    }
+
+    //CRUD Campus
+    public function getCampusByName($data)
+    {
+        $this->db->select('*');
+        $this->db->from('campus');
+        $this->db->like('name', $data, 'both');
+        return $this->db->get()->result();
+    }
+    public function updateCampus($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+        );
+        $this->db->where('id', $data["id"]);
+        $this->db->update('campus', $values);
+    }
+    public function deleteCampus($data)
+    {
+        $this->db->delete('campus', array('id' => $data["id"]));
+    }
+    public function createCampus($data)
+    {
+        $values = array(
+            'name' => $data["name"],
+        );
+        $this->db->insert('campus', $values);
     }
 
     //CRUD addresses

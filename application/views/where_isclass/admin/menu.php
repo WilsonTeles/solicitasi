@@ -21,6 +21,9 @@
 						<a href="<?php echo site_url('where_isclass/admin/periods') ?>" class="nav-link">Períodos</a>
 					</li>
 					<li class="nav-item">
+						<a href="<?php echo site_url('where_isclass/admin/campus') ?>" class="nav-link">Campus</a>
+					</li>
+					<li class="nav-item">
 						<a href="<?php echo site_url('where_isclass/admin/addresses') ?>" class="nav-link">Endereços</a>
 					</li>
 				</ul>
