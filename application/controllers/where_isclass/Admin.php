@@ -11,10 +11,6 @@ class Admin extends CI_Controller
     }
     public function index($outraFuncao = null)
     {
-        //$this->load->view('admin/classroom_create_edit.phtml');
-
-        //$data['user_id'] = $this->session->userdata('user_id');
-        //$data['user_firstname'] = $this->session->userdata('user_firstname');
         is_null($outraFuncao) ? $data['table'] = $this->Classroom_model->getTurmas() : $data['table'] = $this->session->userdata('table');
         $data['Título_da_pagina'] = '';
 
@@ -87,6 +83,7 @@ class Admin extends CI_Controller
     public function subjects()
     {
         $data['table'] = $this->Classroom_model->getSubjectByName('');
+        $data['teacherDropdown'] = $this->Classroom_model->getTeacherAsDropdown();
 
         $data['Título_da_pagina'] = '';
         $data['_view'] = 'where_isclass/admin/subjects.phtml';
@@ -226,15 +223,21 @@ class Admin extends CI_Controller
         foreach ($_POST as $key => $value) {
             $data[$key] = $this->input->post($key);
         }
+        $x = 0;
         $y = 0;
         for ($i = 1; $i <= 6; $i++) {
             if (isset($data['weekDayOptions' . $i])) {
-                $data['week_day'][$y] = $i;
+                $data['1week_day'][$x] = $i;
+                $x++;
+            }
+            if ($data['schedule-select'] == 2 && isset($data['2weekDayOptions' . $i])) {
+                $data['2week_day'][$y] = $i;
                 $y++;
             }
         }
+        //var_dump($data);
         $this->Classroom_model->updateClassroom($data);
-        $this->sendEmail($data['id']);
+        //$this->sendEmail($data['id']);
         redirect('where_isclass/admin');
     }
     public function createTurma()
@@ -246,7 +249,7 @@ class Admin extends CI_Controller
         $y = 0;
         for ($i = 1; $i <= 6; $i++) {
             if (isset($data['weekDayOptions' . $i])) {
-                $data['week_day'][$x] = $i;
+                $data['1week_day'][$x] = $i;
                 $x++;
             }
             if ($data['schedule-select'] == 2 && isset($data['2weekDayOptions' . $i])) {
