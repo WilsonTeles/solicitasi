@@ -189,7 +189,7 @@
 			</div>
 		</div>
 	</div>
-			<?php var_dump($class)?>
+			<?php //var_dump($class)?>
 
 	<script>
 		var teacher = document.getElementById('teacher-select');
@@ -212,7 +212,6 @@
 				break;
 			}
 		}
-		console.log(teacher.text);
 		for (var i=0; i<subjectCount; i++) {
 			if (subject.options[i].innerHTML == "<?php echo $class['turma'] ?>") {
 				subject.options[i].selected = true;
@@ -235,41 +234,49 @@
 		<?php
 		$dias = explode(", ", $class['dia']);
 		$salas = explode(', ', $class['sala']);
+		$hini = explode(", ", $class["horarios_ini"]);
+		$hfim = explode(", ", $class["horarios_fim"]);
 		$optionDia[] = '';
 		$i = 0;
-		foreach($dias as $dia): ?>
-			if ("<?php echo $dia?>" == "Segunda"){
-				document.getElementById('firstWeekDay1').checked = true;
-			} else if ("<?php echo $dia?>" == "Terça"){
-				document.getElementById('firstWeekDay2').checked = true;
-			} else if ("<?php echo $dia?>" == "Quarta"){
-				document.getElementById('firstWeekDay3').checked = true;
-			}else if ("<?php echo $dia?>" == "Quinta"){
-				document.getElementById('firstWeekDay4').checked = true;
-			}else if ("<?php echo $dia?>" == "Sexta"){
-				document.getElementById('firstWeekDay5').checked = true;
-			}else if ("<?php echo $dia?>" == "Sábado"){
-				document.getElementById('firstWeekDay6').checked = true;
-			}
-		<?php endforeach; ?>
+		for($i = 0; $i < count($dias); $i++): 
+			if (count($salas) == 1 || $i == 0): ?>
+				checkBoxes("<?php echo $dias[$i]?>","");
+			<?php elseif($i == 1):?>
+				(checkBoxes("<?php echo $dias[$i]?>", "2"))
+			<?php endif;?>
+		<?php endfor; ?>
 		endereco.value = "<?php echo $class['endereco'] ?>";
-		var salas = "<?php echo count($salas) ?>" 
-		document.getElementById('room-input').value = "<?php echo $salas[0] ?>"
-		if (salas > 1){
-			document.getElementById('2room-input').value = "<?php echo $salas[1] ?>"
+		
+		var salas = "<?php echo count($salas) ?>" ;
+		var schedule = document.querySelector('#schedule-select');
+
+		var hini = "<?php echo count($hini)?>";
+		var hfim = "<?php echo count($hfim)?>";
+		horario_ini.value = "<?php echo $hini[0] ?>";
+		horario_fim.value = "<?php echo $hfim[0] ?>";
+		if (hini > 1 || hfim > 1){
+			document.getElementById('2start-time-input').value = "<?php echo (isset($hini[1]) ? $hini[1] : '') ?>";
+			document.getElementById('2end-time-input').value = "<?php echo (isset($hfim[1]) ? $hfim[1] : '') ?>";
+		} else if (salas > 1){
+			document.getElementById('2start-time-input').value = "<?php echo $hini[0] ?>";
+			document.getElementById('2end-time-input').value = "<?php echo $hfim[0] ?>";
 		}
-		horario_ini.value = "<?php echo $class['horario_ini'] ?>";
-		horario_fim.value = "<?php echo $class['horario_fim'] ?>";
+
+		document.getElementById('room-input').value = "<?php echo $salas[0] ?>";
+		if (salas > 1){
+			document.getElementById('2room-input').value = "<?php echo (isset($salas[1]) ? $salas[1] : '') ?>";
+			schedule.value = 2;
+		} else {segundoHorario();}
 		maps.value = '<?php echo $class['maps'] ?>';
 
 		<?php endif;?>
-		var linha = document.querySelector('#second-row');
-		var period = document.querySelector('#schedule-select');
-		period.addEventListener('change', function(event){
+		schedule.addEventListener('change', function(event){
 			segundoHorario();
 		}, false);
 		function segundoHorario(){
-			if (period.value == 1){
+			var linha = document.querySelector('#second-row');
+			var schedule = document.querySelector('#schedule-select');
+			if (schedule.value == 1){
 				linha.style.display = "none";
 				document.getElementById('2start-time-input').required = false;
 				document.getElementById('2end-time-input').required = false;
@@ -309,6 +316,21 @@
 					});
 				}
 			});
+		}
+		function checkBoxes(dia, number){
+			if (dia == "Segunda"){
+				document.getElementById(number+'firstWeekDay1').checked = true;
+			} else if (dia == "Terça"){
+				document.getElementById(number+'firstWeekDay2').checked = true;
+			} else if (dia == "Quarta"){
+				document.getElementById(number+'firstWeekDay3').checked = true;
+			}else if (dia == "Quinta"){
+				document.getElementById(number+'firstWeekDay4').checked = true;
+			}else if (dia == "Sexta"){
+				document.getElementById(number+'firstWeekDay5').checked = true;
+			}else if (dia == "Sábado"){
+				document.getElementById(number+'firstWeekDay6').checked = true;
+			}
 		}
 
 		var building = document.getElementById('building-select');
