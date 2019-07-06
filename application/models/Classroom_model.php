@@ -21,6 +21,7 @@ class Classroom_model extends CI_Model
         addresses.building as building,
         addresses.address as address,
         period.name as period,
+        classroom.turma as turma,
         GROUP_CONCAT(distinct week_day.name order by week_day.id ASC SEPARATOR "," ) as wdays,
         GROUP_CONCAT(distinct classroom_week_day.room order by week_day.id ASC SEPARATOR ",") as rooms,
         GROUP_CONCAT(distinct classroom_week_day.start_time order by week_day.id ASC SEPARATOR ",") as start_times,
@@ -66,6 +67,7 @@ class Classroom_model extends CI_Model
         addresses.building as building,
         addresses.address as address,
         period.name as period,
+        classroom.turma as turma,
         GROUP_CONCAT(distinct week_day.name order by week_day.id ASC SEPARATOR "," ) as wdays,
         GROUP_CONCAT(distinct classroom_week_day.room order by week_day.id ASC SEPARATOR ",") as rooms,
         GROUP_CONCAT(distinct classroom_week_day.start_time order by week_day.id ASC SEPARATOR ",") as start_times,
@@ -107,11 +109,12 @@ class Classroom_model extends CI_Model
         foreach ($collection->result() as $row) {
             $tableArray[$i] = array(
                 'id' => $row->cid,
-                'turma' => $row->sname,
+                'materia' => $row->sname,
                 'professor' => $row->tname,
                 'prof_email' => $row->temail,
-                'horario_ini' => $row->start_time,
-                'horario_fim' => $row->end_time,
+                // 'horario_ini' => $row->start_time,
+                // 'horario_fim' => $row->end_time,
+                'turma' => $row->turma,
                 'horarios_ini' => $row->start_times,
                 'horarios_fim' => $row->end_times,
                 'dia' => $row->wdays,
@@ -235,6 +238,7 @@ class Classroom_model extends CI_Model
             'subject_id' => $data["subject_id"],
             'period_id' => $data["period_id"],
             'address_id' => $data["building"],
+            'turma' => $data['turma']
         );
         $this->db->where('id', $data["id"]);
         $this->db->update('classroom', $values);
@@ -273,6 +277,7 @@ class Classroom_model extends CI_Model
             'subject_id' => $data['subject_id'],
             'period_id' => $data['period_id'],
             'address_id' => $data['building'],
+            'turma' => $data['turma']
         );
         $this->db->insert('classroom', $values);
         $last_id = $this->db->insert_id();

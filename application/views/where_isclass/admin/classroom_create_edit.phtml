@@ -50,6 +50,10 @@
 											<?php echo $periodDropdown ?>
 										</select>
 									</div>
+									<div class="form-group col-md-4">
+										<label for="turma-select">Turma</label>
+										<input type="text" placeholder="EX.: A1" class="form-control" id="turma-input" name="turma" required />
+									</div>
 								</div>
 								<hr />
 								<div class="form-row">
@@ -115,18 +119,13 @@
 										<label for="name-input">Horário de Início</label>
 										<input type="time" placeholder="18:00" class="form-control" id="start-time-input" name="start_time" required />
 										<br/>
-										<label for="name-input">Número</label>
+										<label for="name-input">Sala</label>
 										<input type="text" placeholder="Número da Sala" class="form-control" id="room-input" name="room" required />
 									</div>
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Término</label>
 										<input type="time" placeholder="20:00" class="form-control" id="end-time-input" name="end_time" required />
 										<br/>
-										<label for="period-select">Tipo de Sala</label>
-										<select class="custom-select" id="room-type-select" name="room-type-select">
-											<option selected value="1">Sala</option>
-											<option value="2">Laboratório</option>
-										</select>
 									</div>
 								</div>
 								<br/>
@@ -161,18 +160,13 @@
 										<label for="name-input">Horário de Início</label>
 										<input type="time" placeholder="18:00" class="form-control" id="2start-time-input" name="2start_time" required />
 										<br/>
-										<label for="name-input">Número</label>
+										<label for="name-input">Sala</label>
 										<input type="text" placeholder="Número da Sala" class="form-control" id="2room-input" name="2room"  />
 									</div>
 									<div class="form-group col-md-2">
 										<label for="name-input">Horário de Término</label>
 										<input type="time" placeholder="20:00" class="form-control" id="2end-time-input" name="2end_time" required />
 										<br/>
-										<label for="period-select">Tipo de Sala</label>
-										<select class="custom-select" id="room-type-select" name="room-type-select">
-											<option selected value="1">Sala</option>
-											<option value="2">Laboratório</option>
-										</select>
 									</div>
 								</div>
 
@@ -198,12 +192,14 @@
 		var subjectCount = subject.options.length;
 		var period = document.getElementById('period-select');
 		var periodCount = period.options.length;
+		var turma = document.getElementById('turma-input');
 		var campus = document.getElementById('campus-select');
 		var campusCount = campus.options.length;
 		var endereco = document.getElementById('address-input');
 		var maps = document.getElementById('maps_info');
 		var horario_ini = document.getElementById('start-time-input');
 		var horario_fim = document.getElementById('end-time-input');
+		var schedule = document.getElementById("schedule-select");
 
 		<?php if (!empty($class)): ?>
 		for (var i=0; i<teacherCount; i++){
@@ -213,7 +209,7 @@
 			}
 		}
 		for (var i=0; i<subjectCount; i++) {
-			if (subject.options[i].innerHTML == "<?php echo $class['turma'] ?>") {
+			if (subject.options[i].innerHTML == "<?php echo $class['materia'] ?>") {
 				subject.options[i].selected = true;
 				break;
 			}
@@ -230,6 +226,7 @@
 				break;
 			}
 		}
+		turma.value = "<?php echo $class['turma']?>";
 		
 		<?php
 		$dias = explode(", ", $class['dia']);
@@ -248,8 +245,6 @@
 		endereco.value = "<?php echo $class['endereco'] ?>";
 		
 		var salas = "<?php echo count($salas) ?>" ;
-		var schedule = document.querySelector('#schedule-select');
-
 		var hini = "<?php echo count($hini)?>";
 		var hfim = "<?php echo count($hfim)?>";
 		horario_ini.value = "<?php echo $hini[0] ?>";

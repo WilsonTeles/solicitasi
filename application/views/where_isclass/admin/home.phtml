@@ -30,7 +30,7 @@
 					<div class="card">
 						<div class="card-body">
 							<h3 class="card-title">
-								<?php echo $row["turma"] ?>
+								<?php echo $row["materia"] ?>
 							</h3>
 							<h6 class="card-subtitle mb-1 text-muted">
 								<?php echo $row["professor"] ?>
@@ -53,11 +53,14 @@
 									<?php echo $row["dia"] ?>
 								</p>
 								<p class="card-text">
-									<?php echo $row["horario_ini"] . ' - ' . $row["horario_fim"] ?>
+									<?php echo $row["horarios_ini"] . ' - ' . $row["horarios_fim"] ?>
 								</p>
 							<?php endif ?>
 							<p class="card-text">
 								<?php echo $row["sala"] ?>
+							</p>
+							<p class="card-text">
+								<?php echo 'Turma: ' . $row["turma"] ?>
 							</p>
 							<a type="button" class="btn btn-success" href="<?php echo site_url('where_isclass/admin/classroom/'.$row["id"].'/editar') ?>">Editar</a>
 							<a type="button" class="btn btn-danger" href="<?php echo site_url('where_isclass/admin/deleteTurma/'.$row["id"])?>">Excluir</a>
