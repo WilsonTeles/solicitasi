@@ -16,6 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `addresses`
+--
+
+DROP TABLE IF EXISTS `addresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `addresses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `campus_id` int(11) DEFAULT NULL,
+  `building` varchar(100) DEFAULT NULL,
+  `iframe` text,
+  `address` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `addresses_FK` (`campus_id`),
+  CONSTRAINT `addresses_FK` FOREIGN KEY (`campus_id`) REFERENCES `campus` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `addresses`
+--
+
+LOCK TABLES `addresses` WRITE;
+/*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
+INSERT INTO `addresses` VALUES (1,1,'Instituto de Computação','<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5197.607880611329!2d-43.13460697906884!3d-22.903639607400606!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x99817e444e692b%3A0xfd5e35fb577af2f5!2sUFF+-+Instituto+de+Computa%C3%A7%C3%A3o!5e0!3m2!1spt-BR!2sbr!4v1559924488015!5m2!1spt-BR!2sbr\" width=\"400\" height=\"300\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>','Av. Gal. Milton Tavares de Souza,, s/n - São Domingos, Niterói - RJ, 24210-310'),(2,2,'Bloco A','<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5197.653412107663!2d-43.13513802936006!3d-22.902451587189322!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9983d45a5fd11d%3A0x61be0557e6921d0c!2sARTES+UFF+-+BLOCO+A+-+CAMPUS+DO+GRAGOAT%C3%81!5e0!3m2!1spt-BR!2sbr!4v1559918872379!5m2!1spt-BR!2sbr\" width=\"400\" height=\"300\" frameborder=\"0\" style=\"border:0\" allowfullscreen=\"\"></iframe>','R. Alexandre Moura, 8 - São Domingos, Niterói - RJ, 24210-200'),(4,1,'Bloco H','<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5197.653412107663!2d-43.13513802936006!3d-22.902451587189322!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x633a10cf6ed2331c!2sBloco+H+-+UFASA+(UFF+-+Campus+Praia+Vermelha)!5e0!3m2!1spt-BR!2sbr!4v1559919983242!5m2!1spt-BR!2sbr\" width=\"400\" height=\"300\" frameborder=\"0\" style=\"border:0\" allowfullscreen=\"\"></iframe>','R. Passo da Pátria - Gragoatá, Niterói - RJ, 24210-346');
+/*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `administradores`
 --
 
@@ -94,6 +123,30 @@ INSERT INTO `alunos` VALUES (1,'WILSON TELES MARCOLIN JUNIOR','114083045','wjmar
 UNLOCK TABLES;
 
 --
+-- Table structure for table `campus`
+--
+
+DROP TABLE IF EXISTS `campus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `campus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `campus`
+--
+
+LOCK TABLES `campus` WRITE;
+/*!40000 ALTER TABLE `campus` DISABLE KEYS */;
+INSERT INTO `campus` VALUES (1,'Praia Vermelha'),(2,'Gragoatá'),(4,'Valonguinho');
+/*!40000 ALTER TABLE `campus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ci_sessions`
 --
 
@@ -131,20 +184,19 @@ CREATE TABLE `classroom` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `teacher_id` int(11) NOT NULL,
   `subject_id` int(11) NOT NULL,
-  `campus` varchar(100) DEFAULT NULL,
-  `building` varchar(100) DEFAULT NULL,
-  `number` varchar(100) DEFAULT NULL,
-  `maps_info` text,
-  `address` varchar(100) DEFAULT NULL,
   `period_id` int(11) NOT NULL,
+  `address_id` int(11) DEFAULT NULL,
+  `turma` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `classroom_teacher_FK` (`teacher_id`),
   KEY `classroom_subject_FK` (`subject_id`),
   KEY `classroom_period_FK` (`period_id`),
+  KEY `classroom_FK` (`address_id`),
+  CONSTRAINT `classroom_FK` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`id`),
   CONSTRAINT `classroom_period_FK` FOREIGN KEY (`period_id`) REFERENCES `period` (`id`),
   CONSTRAINT `classroom_subject_FK` FOREIGN KEY (`subject_id`) REFERENCES `disciplinas` (`id`),
   CONSTRAINT `classroom_teacher_FK` FOREIGN KEY (`teacher_id`) REFERENCES `professores` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +205,7 @@ CREATE TABLE `classroom` (
 
 LOCK TABLES `classroom` WRITE;
 /*!40000 ALTER TABLE `classroom` DISABLE KEYS */;
-INSERT INTO `classroom` VALUES (1,1,1,'Praia Vermelha','Instituto de Computação','302','<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.2396137396113!2d-43.1351176854005!3d-22.904531243548053!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x99817dce2f93eb%3A0x9e97773b91b93bba!2sUFF+-+Campus+Praia+Vermelha!5e0!3m2!1spt-BR!2sbr!4v1553959827250!5m2!1spt-BR!2sbr\" width=\"400\" height=\"300\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>','rua lele',1),(2,2,3,'Praia Vermelha','Instituto de Computação','306','<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.2396137396113!2d-43.1351176854005!3d-22.904531243548053!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x99817dce2f93eb%3A0x9e97773b91b93bba!2sUFF+-+Campus+Praia+Vermelha!5e0!3m2!1spt-BR!2sbr!4v1553959827250!5m2!1spt-BR!2sbr\" width=\"400\" height=\"300\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>','rua lele',1),(3,3,2,'Praia Vermelha','Instituto de Computação','202','<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.2396137396113!2d-43.1351176854005!3d-22.904531243548053!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x99817dce2f93eb%3A0x9e97773b91b93bba!2sUFF+-+Campus+Praia+Vermelha!5e0!3m2!1spt-BR!2sbr!4v1553959827250!5m2!1spt-BR!2sbr\" width=\"400\" height=\"300\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>','rua haha',1);
+INSERT INTO `classroom` VALUES (1,5,1,1,1,'D1'),(2,66,180,1,2,'C1'),(3,66,2,1,2,'B1'),(4,7,204,3,1,'F1'),(5,9,135,3,2,'A1');
 /*!40000 ALTER TABLE `classroom` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,12 +222,13 @@ CREATE TABLE `classroom_week_day` (
   `week_day_id` int(11) NOT NULL,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
+  `room` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `classroom_week_day_classroom_FK` (`classroom_id`),
   KEY `classroom_week_day_week_day_FK` (`week_day_id`),
   CONSTRAINT `classroom_week_day_classroom_FK` FOREIGN KEY (`classroom_id`) REFERENCES `classroom` (`id`),
   CONSTRAINT `classroom_week_day_week_day_FK` FOREIGN KEY (`week_day_id`) REFERENCES `week_day` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +237,7 @@ CREATE TABLE `classroom_week_day` (
 
 LOCK TABLES `classroom_week_day` WRITE;
 /*!40000 ALTER TABLE `classroom_week_day` DISABLE KEYS */;
-INSERT INTO `classroom_week_day` VALUES (24,2,4,'18:01:00','22:01:00'),(27,1,2,'18:00:00','20:00:00'),(28,1,4,'18:00:00','20:00:00'),(29,3,3,'18:00:00','20:00:00'),(30,3,5,'18:00:00','20:00:00');
+INSERT INTO `classroom_week_day` VALUES (31,2,4,'18:01:00','22:01:00','306'),(59,1,2,'18:00:00','20:00:00','302'),(60,1,4,'20:00:00','22:00:00','305'),(61,3,3,'18:00:00','20:00:00','202'),(62,3,5,'18:00:00','20:00:00','202'),(63,5,2,'10:00:00','12:00:00','415'),(64,5,4,'10:00:00','12:00:00','412'),(65,4,1,'20:00:00','22:00:00','215'),(66,4,3,'20:00:00','22:00:00','315');
 /*!40000 ALTER TABLE `classroom_week_day` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -267,6 +320,37 @@ INSERT INTO `period` VALUES (1,'2018/2'),(3,'2019/1');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `plano_estudo`
+--
+
+DROP TABLE IF EXISTS `plano_estudo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `plano_estudo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `idaluno` int(11) NOT NULL,
+  `iddisc` int(11) NOT NULL,
+  `turma_plano` varchar(2) NOT NULL,
+  `acao` varchar(10) NOT NULL DEFAULT 'CURSANDO',
+  `situacao` varchar(20) NOT NULL DEFAULT 'ESPERANDO DECISAO',
+  `iddisc_nova` int(11) DEFAULT NULL,
+  `turma_nova` varchar(2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idaluno` (`idaluno`),
+  CONSTRAINT `plano_estudo_ibfk_1` FOREIGN KEY (`idaluno`) REFERENCES `alunos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `plano_estudo`
+--
+
+LOCK TABLES `plano_estudo` WRITE;
+/*!40000 ALTER TABLE `plano_estudo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `plano_estudo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `professores`
 --
 
@@ -275,11 +359,10 @@ DROP TABLE IF EXISTS `professores`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `professores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `email` varchar(50) COLLATE latin1_general_ci NOT NULL,
-  `img_url` varchar(100) COLLATE latin1_general_ci DEFAULT NULL,
+  `nome` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `email` varchar(50) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -288,7 +371,7 @@ CREATE TABLE `professores` (
 
 LOCK TABLES `professores` WRITE;
 /*!40000 ALTER TABLE `professores` DISABLE KEYS */;
-INSERT INTO `professores` VALUES (2,'Aline de Paula Nascimento','',NULL),(3,'Aline Marins Paes Carvalho','',NULL),(4,'Andréa Magalhães Magdaleno','',NULL),(5,'Anselmo Antunes Montenegro','',NULL),(6,'Antonio Augusto de Aragão Rocha','',NULL),(7,'Aura Conci','',NULL),(8,'Bruno Lopes','',NULL),(9,'Carlos Alberto de Jesus Martinhon','',NULL),(10,'Carlos Alberto Soares Ribeiro','',NULL),(11,'Celso da Cruz Carneiro Ribeiro','',NULL),(12,'Célio Vinicius Neves de Albuquerque','',NULL),(13,'Christiano de Oliveira Braga','',NULL),(14,'Cristina Nader Vasconcelos','',NULL),(15,'Daniel Cardoso Moraes de Oliveira','',NULL),(16,'Daniela Gorski Trevisan','',NULL),(17,'Dante Corbucci Filho','',NULL),(18,'Débora Christina Muchaluat Saade','',NULL),(19,'Diego Gimenez Passos','',NULL),(20,'Esteban Walter Gonzalez Clua','',NULL),(21,'Eugene Francis Vinod Rebello','',NULL),(22,'Fábio Protti','',NULL),(23,'Fernanda Passos','',NULL),(24,'Flávia Cristina Bernardini','',NULL),(25,'Flávio Seixas','',NULL),(26,'Helena Cristina da Gama Leitão','',NULL),(27,'Igor Monteiro Moraes','',NULL),(28,'Isabel Cristina Mello Rosset','',NULL),(29,'Isabel Leite Cafezeiro','',NULL),(30,'John Reed','',NULL),(31,'José Henrique Carneiro de Araújo','',NULL),(32,'José Raphael Bokehi','',NULL),(33,'José Ricardo de Almeida Torreão','',NULL),(34,'José Viterbo Filho','',NULL),(35,'Karina Mochetti','',NULL),(36,'Lauro Eduardo Kozovits','',NULL),(37,'Leandro Augusto Frata Fernandes','',NULL),(38,'Leonardo Cruz da Costa','leo@ic.uff.br',NULL),(39,'Leonardo Gresta Paulino Murta','',NULL),(40,'Loana Tito Nogueira','',NULL),(41,'Luciana Cardoso de Castro Salgado','',NULL),(42,'Luis Antonio Brasil Kowada','',NULL),(43,'Luis Martí Orosa','',NULL),(44,'Luiz André Portes Paes Leme','',NULL),(45,'Luiz Satoru Ochi','',NULL),(46,'Lúcia Maria de Assumpção Drummond','',NULL),(47,'Marcelo Fornazin','',NULL),(48,'Marco Antonio Monteiro Silva Ramos','',NULL),(49,'Marcos Kalinowski','',NULL),(50,'Marcos Lage','',NULL),(51,'Maria Cristina Silva Boeres','',NULL),(52,'Mauricio Kischinhevsky','',NULL),(53,'Milton Brown do Coutto Filho','',NULL),(54,'Otton Teixeira da Silveira Filho','',NULL),(55,'Raphael Pereira de Oliveira Guerra','',NULL),(56,'Raquel Bravo','',NULL),(57,'Regina Célia Paula Leal Toledo','',NULL),(58,'Ricardo Leiderman','',NULL),(59,'Rodrigo Salvador Monteiro','',NULL),(60,'Simone de Lima Martins','',NULL),(61,'Teresa Cristina de Aguiar','',NULL),(62,'Uéverton dos Santos Souza','',NULL),(64,'Victor Teixeira de Almeida','',NULL),(66,'Alexandre Plastino','plastino@ic.uff.br','imagens/teacherimage/Alexandre_Plastinoplastino.png');
+INSERT INTO `professores` VALUES (2,'Aline de Paula Nascimento',''),(3,'Aline Marins Paes Carvalho',''),(4,'Andréa Magalhães Magdaleno',''),(5,'Anselmo Antunes Montenegro',''),(6,'Antonio Augusto de Aragão Rocha',''),(7,'Aura Conci',''),(8,'Bruno Lopes',''),(9,'Carlos Alberto de Jesus Martinhon',''),(10,'Carlos Alberto Soares Ribeiro',''),(11,'Celso da Cruz Carneiro Ribeiro',''),(12,'Célio Vinicius Neves de Albuquerque',''),(13,'Christiano de Oliveira Braga',''),(14,'Cristina Nader Vasconcelos',''),(15,'Daniel Cardoso Moraes de Oliveira',''),(16,'Daniela Gorski Trevisan',''),(17,'Dante Corbucci Filho',''),(18,'Débora Christina Muchaluat Saade',''),(19,'Diego Gimenez Passos',''),(20,'Esteban Walter Gonzalez Clua',''),(21,'Eugene Francis Vinod Rebello',''),(22,'Fábio Protti',''),(23,'Fernanda Passos',''),(24,'Flávia Cristina Bernardini',''),(25,'Flávio Seixas',''),(26,'Helena Cristina da Gama Leitão',''),(27,'Igor Monteiro Moraes',''),(28,'Isabel Cristina Mello Rosset',''),(29,'Isabel Leite Cafezeiro',''),(30,'John Reed',''),(31,'José Henrique Carneiro de Araújo',''),(32,'José Raphael Bokehi',''),(33,'José Ricardo de Almeida Torreão',''),(34,'José Viterbo Filho',''),(35,'Karina Mochetti',''),(36,'Lauro Eduardo Kozovits',''),(37,'Leandro Augusto Frata Fernandes',''),(38,'Leonardo Cruz da Costa','leo@ic.uff.br'),(39,'Leonardo Gresta Paulino Murta',''),(40,'Loana Tito Nogueira',''),(41,'Luciana Cardoso de Castro Salgado',''),(42,'Luis Antonio Brasil Kowada',''),(43,'Luis Martí Orosa',''),(44,'Luiz André Portes Paes Leme',''),(45,'Luiz Satoru Ochi',''),(46,'Lúcia Maria de Assumpção Drummond',''),(47,'Marcelo Fornazin',''),(48,'Marco Antonio Monteiro Silva Ramos',''),(49,'Marcos Kalinowski',''),(50,'Marcos Lage',''),(51,'Maria Cristina Silva Boeres',''),(52,'Mauricio Kischinhevsky',''),(53,'Milton Brown do Coutto Filho',''),(54,'Otton Teixeira da Silveira Filho',''),(55,'Raphael Pereira de Oliveira Guerra',''),(56,'Raquel Bravo',''),(57,'Regina Célia Paula Leal Toledo',''),(58,'Ricardo Leiderman',''),(59,'Rodrigo Salvador Monteiro',''),(60,'Simone de Lima Martins',''),(61,'Teresa Cristina de Aguiar',''),(62,'Uéverton dos Santos Souza',''),(64,'Victor Teixeira de Almeida',''),(66,'Alexandre Plastino','plastino@ic.uff.br');
 /*!40000 ALTER TABLE `professores` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +391,7 @@ CREATE TABLE `student_classroom` (
   KEY `student_classroom_classroom_FK` (`classroom_id`),
   CONSTRAINT `student_classroom_classroom_FK` FOREIGN KEY (`classroom_id`) REFERENCES `classroom` (`id`),
   CONSTRAINT `student_classroom_user_FK` FOREIGN KEY (`user_id`) REFERENCES `alunos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,88 +400,8 @@ CREATE TABLE `student_classroom` (
 
 LOCK TABLES `student_classroom` WRITE;
 /*!40000 ALTER TABLE `student_classroom` DISABLE KEYS */;
-INSERT INTO `student_classroom` VALUES (1,2,1),(11,1,3),(26,1,2),(28,1,3);
+INSERT INTO `student_classroom` VALUES (1,2,1),(32,1,1),(33,1,3),(34,1,2),(35,1,4);
 /*!40000 ALTER TABLE `student_classroom` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `subject`
---
-
-DROP TABLE IF EXISTS `subject`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subject` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `code` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `subject`
---
-
-LOCK TABLES `subject` WRITE;
-/*!40000 ALTER TABLE `subject` DISABLE KEYS */;
-INSERT INTO `subject` VALUES (1,'Engenharia De Softwares I','123123123'),(2,'Banco de Dados Não Convencionais','71936492'),(3,'Gestão de Processos e Manutenção de Software','826493632');
-/*!40000 ALTER TABLE `subject` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `teacher`
---
-
-DROP TABLE IF EXISTS `teacher`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `teacher` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `img_url` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `teacher`
---
-
-LOCK TABLES `teacher` WRITE;
-/*!40000 ALTER TABLE `teacher` DISABLE KEYS */;
-INSERT INTO `teacher` VALUES (1,'Leonardo Murta','teacherimage/Leonardo_Murtadownload.jpg'),(2,'Andréa Magalhães',NULL),(3,'Victor Almeida',NULL),(5,'Leonardo Cruz',NULL);
-/*!40000 ALTER TABLE `teacher` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `enrollment_code` varchar(100) DEFAULT NULL,
-  `is_admin` tinyint(1) DEFAULT '0',
-  `change_password` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Leo','Cruz','leocruz@id.uff.br','123',NULL,1,0),(2,'Vynicius','Morais Pontes','wilsonteles@id.uff.br','123','12421124',0,0),(3,'Wilson','Teles','wjmarcolin@hotmail.com','123','114083045',0,0),(4,'fafa','fafa','lala@lala.com','123','1234',0,0),(5,'wilson','marcolin','wilson.teles@exablack.com','123','98273',0,0);
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -438,4 +441,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-04 20:06:48
+-- Dump completed on 2019-07-12 16:53:55
